@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useCallback } from 'react';
-import { ThemeContext, ThemeProvider } from './ThemeContext';
+import { ThemeContext } from './ThemeContext';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route, Link, Navigate, useNavigate } from 'react-router-dom';
 import './styles/auth.css';
@@ -927,37 +927,73 @@ function LoginSignup() {
 }
 
 export default function AppWrapper() {
+  // Move theme state and effect here
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light');
+
+  useEffect(() => {
+    document.body.classList.remove('theme-dark', 'theme-light');
+    document.body.classList.add(theme === 'dark' ? 'theme-dark' : 'theme-light');
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
   return (
-    <ErrorBoundary>
-      <ThemeProvider>
-        <BrowserRouter>
+    <ThemeContext.Provider value={{ theme, setTheme }}>
+      <BrowserRouter>
+        <ErrorBoundary>
           <Routes>
             <Route path="/" element={<CoverPage />} />
+            <Route path="/home" element={<App />} />
             <Route path="/login" element={<LoginSignup />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/cover" element={<CoverPage />} />
-            <Route path="/faqs" element={<FAQs />} />
-            <Route path="/calendar" element={<CalendarExample />} />
             <Route path="/analytics" element={<AnalyticsPage />} />
             <Route path="/profile" element={<MyProfilePage />} />
             <Route path="/policies" element={<PoliciesPage />} />
             <Route path="/claims" element={<ClaimsPage />} />
             <Route path="/payments" element={<PaymentsPage />} />
             <Route path="/support" element={<SupportPage />} />
+            <Route path="/faqs" element={<FAQs />} />
             <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/register" element={<Register />} />
             <Route path="/quoteformsummary" element={<QuoteFormSummary />} />
+            <Route path="/calendar" element={<CalendarExample />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
-        </BrowserRouter>
-      </ThemeProvider>
-    </ErrorBoundary>
+        </ErrorBoundary>
+      </BrowserRouter>
+    </ThemeContext.Provider>
   );
 }
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <AppWrapper />
-  </React.StrictMode>
-);
+const rootElement = document.getElementById('root');
+if (!rootElement) {
+  if (process.env.NODE_ENV === 'development') {
+    console.error("Root element with id 'root' not found. Ensure it exists in index.html.");
+  }
+} else {
+  try {
+    const root = ReactDOM.createRoot(rootElement);
+    root.render(
+      <React.StrictMode>
+        <AppWrapper />
+      </React.StrictMode>
+    );
+  } catch (error) {
+    if (process.env.NODE_ENV === 'development') {
+      console.error("Error rendering React application:", error);
+    }
+    // Fallback rendering directly to the body if root fails
+    document.body.innerHTML = `
+      <div style="padding: 20px; margin: 20px; border: 1px solid #fff; border-radius: 4px;
+                  background-color: #f8d7da; color: #721c24; font-family: sans-serif;">
+        <h2>Something went wrong while loading the application.</h2>
+        <p>Please try refreshing the page. If the problem persists, contact support.</p>
+        <button onclick="window.location.reload()"
+                style="padding: 8px 16px; background-color: #dc3545; color: white;
+                       border: none; border-radius: 4px; cursor: pointer;">
+          Refresh Page
+        </button>
+      </div>
+    `;
+  }
+}

@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/auth.css';
 import ProductSelectionModal from './productselectionmodule';
@@ -10,15 +10,24 @@ import { ThemeContext } from '../ThemeContext';
 
 function CoverPage() {
   const [showModal, setShowModal] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
   const { theme, toggleTheme } = useContext(ThemeContext);
 
+  useEffect(() => {
+    // Trigger animation after component mounts
+    setIsVisible(true);
+  }, []);
+
   return (
-    <div className={`coverpage-root ${theme}-mode`} style={{
-      minHeight: '100vh',
-      background: theme === 'dark' ? '#232526' : '#fff',
-      color: theme === 'dark' ? '#fff' : '#222',
-      transition: 'background-color 0.3s, color 0.3s'
-    }}>
+    <div 
+      className={`coverpage-root ${theme}-mode`} 
+      style={{
+        minHeight: '100vh',
+        background: theme === 'dark' ? '#232526' : '#fff',
+        color: theme === 'dark' ? '#fff' : '#222',
+        transition: 'background-color 0.3s, color 0.3s',
+      }}
+    >
       {/* Header */}
       <header style={{
         display: 'flex',
@@ -67,7 +76,17 @@ function CoverPage() {
       </header>
 
       {/* Main Content */}
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '40px 16px 0 16px', textAlign: 'center' }}>
+      <div 
+        style={{ 
+          maxWidth: 1200, 
+          margin: '0 auto', 
+          padding: '40px 16px 0 16px', 
+          textAlign: 'center',
+          opacity: isVisible ? 1 : 0,
+          transform: isVisible ? 'translateX(0)' : 'translateX(100px)',
+          transition: 'opacity 1.5s ease-out, transform 1.5s ease-out'
+        }}
+      >
         <div style={{ marginBottom: 32 }}>
           <div style={{ fontSize: 20, color: theme === 'dark' ? '#ccc' : '#222', marginBottom: 8 }}>Welcome to CIC Insurance Group</div>
           <div style={{ fontSize: 40, fontWeight: 700, color: theme === 'dark' ? '#fff' : '#111', marginBottom: 8 }}>We keep our word</div>
