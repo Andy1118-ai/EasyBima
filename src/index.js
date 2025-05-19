@@ -19,6 +19,7 @@ import QuoteFormSummary from './components/quoteformsummary';
 import App from './App';
 import FAQs from './components/FAQs';
 import CalendarExample from './components/examples/CalendarExample';
+import DatePickerExample from './components/examples/DatePickerExample';
 import AnalyticsPage from './components/AnalyticsPage';
 import MyProfilePage from './components/MyProfilePage';
 import PoliciesPage from './components/PoliciesPage';
@@ -146,6 +147,7 @@ function LoginSignup() {
     { image: picture3, description: 'Easy insurance solutions' },
     { image: picture4, description: 'Guide to insurance' },
     { image: picture5, description: 'Guides through life' },
+    { image: picture6, description: 'Your complete insurance solution' },
   ];
 
   const nextSlide = useCallback(() => {
@@ -936,8 +938,16 @@ export default function AppWrapper() {
     localStorage.setItem('theme', theme);
   }, [theme]);
 
+  const toggleTheme = () => {
+    setTheme(prevTheme => {
+      const newTheme = prevTheme === 'light' ? 'dark' : 'light';
+      localStorage.setItem('theme', newTheme);
+      return newTheme;
+    });
+  };
+
   return (
-    <ThemeContext.Provider value={{ theme, setTheme }}>
+    <ThemeContext.Provider value={{ theme, setTheme, toggleTheme }}>
       <BrowserRouter>
         <ErrorBoundary>
           <Routes>
@@ -957,6 +967,7 @@ export default function AppWrapper() {
             <Route path="/register" element={<Register />} />
             <Route path="/quoteformsummary" element={<QuoteFormSummary />} />
             <Route path="/calendar" element={<CalendarExample />} />
+            <Route path="/datepicker" element={<DatePickerExample />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </ErrorBoundary>
