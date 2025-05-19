@@ -620,6 +620,9 @@
   padding: 24px 40px 12px 40px;
   border-bottom: 1px solid #f3eaea;
   background: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 .cover-header .logo img {
   height: 48px;
@@ -629,6 +632,7 @@
   display: flex;
   align-items: center;
   gap: 24px;
+  margin-left: auto;
 }
 .cover-nav .nav-link {
   color: #800000;
@@ -665,31 +669,32 @@
 }
 .welcome-text {
   text-align: center;
-  margin-top: 32px;
-  margin-bottom: 32px;
+  margin-top: 48px;
+  margin-bottom: 40px;
 }
 .welcome-text h2 {
   color: #222;
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   font-weight: 400;
   margin-bottom: 0.5rem;
 }
 .welcome-text h1 {
   color: #111;
-  font-size: 2.5rem;
+  font-size: 2.8rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
+  letter-spacing: -1px;
 }
 .steps-intro {
   color: #888;
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   margin-bottom: 0;
 }
 .steps-container {
   display: flex;
   justify-content: center;
-  gap: 56px;
-  margin-bottom: 32px;
+  gap: 64px;
+  margin-bottom: 40px;
   flex-wrap: wrap;
 }
 .step {
@@ -698,6 +703,9 @@
   align-items: center;
   max-width: 260px;
   text-align: center;
+  background: none;
+  box-shadow: none;
+  padding: 0 8px;
 }
 .step-image img, .step-image .image-placeholder {
   width: 120px;
@@ -720,43 +728,46 @@
 }
 .step h3 {
   color: #a92219;
-  font-size: 1.1rem;
+  font-size: 1.13rem;
   font-weight: 600;
   margin-bottom: 6px;
 }
 .step p {
   color: #888;
-  font-size: 0.98rem;
+  font-size: 1.01rem;
   margin-bottom: 0;
 }
 .cta-container {
   display: flex;
   justify-content: center;
-  margin-top: 18px;
+  margin-top: 24px;
 }
 .start-btn {
   background: #a92219;
   color: #fff;
   border: none;
   border-radius: 8px;
-  padding: 14px 32px;
-  font-size: 1.1rem;
-  font-weight: 600;
+  padding: 16px 40px;
+  font-size: 1.18rem;
+  font-weight: 700;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.2s, box-shadow 0.2s;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
+  box-shadow: 0 2px 8px rgba(128,0,0,0.08);
 }
 .start-btn:hover {
   background: #800000;
+  box-shadow: 0 4px 16px rgba(128,0,0,0.12);
 }
 .cic-footer {
-  background: #800000;
-  color: #fff;
+  background: #fafe01;
+  color: #000000;
   text-align: center;
   padding: 24px 0 12px 0;
-  margin-top: 40px;
+  margin-top: auto;
+  border-top: 1px solid #f3eaea;
 }
 .cic-footer .footer-content {
   max-width: 600px;
@@ -764,12 +775,12 @@
 }
 .cic-footer .contact-info {
   margin-top: 8px;
-  font-size: 1.05rem;
+  font-size: 1.08rem;
 }
 
 @media (max-width: 900px) {
   .steps-container {
-    gap: 24px;
+    gap: 28px;
   }
   .step {
     max-width: 180px;
@@ -792,6 +803,10 @@
   }
   .welcome-text h1 {
     font-size: 1.5rem;
+  }
+  .start-btn {
+    font-size: 1rem;
+    padding: 12px 24px;
   }
 }
 
@@ -1012,17 +1027,51 @@
 body.theme-dark {
   background: #232526 !important;
   color: #fff !important;
+  transition: background-color 0.3s, color 0.3s !important;
 }
+
 body.theme-light {
   background: #f8f9fa !important;
   color: #222 !important;
+  transition: background-color 0.3s, color 0.3s !important;
 }
+
+/* Theme mode classes */
+.dark-mode {
+  background-color: #232526 !important;
+  color: #fff !important;
+  transition: background-color 0.3s, color 0.3s !important;
+}
+
+.light-mode {
+  background-color: #f8f9fa !important;
+  color: #222 !important;
+  transition: background-color 0.3s, color 0.3s !important;
+}
+
+/* Theme toggle button styles */
 .theme-toggle-btn {
   transition: color 0.3s;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
 }
+
+.theme-toggle-btn:hover {
+  background-color: rgba(128, 0, 0, 0.1);
+}
+
 body.theme-dark .theme-toggle-btn {
   color: #fff !important;
 }
+
 body.theme-light .theme-toggle-btn {
   color: #800000 !important;
+}
+
+/* Ensure all elements inherit theme colors */
+* {
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 }

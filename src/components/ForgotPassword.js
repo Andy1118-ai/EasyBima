@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ThemeContext } from '../App';
+import { ThemeContext } from '../ThemeContext';
 import logo from '../assets/enhanced/cic_insurance.png';
 import { USER_TYPES, validateIdentifier } from '../utils/auth';
 

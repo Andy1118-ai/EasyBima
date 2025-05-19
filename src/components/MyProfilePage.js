@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { ThemeContext } from '../App';
+import { ThemeContext } from '../ThemeContext';
 import cicLogo from '../assets/cic_insurance.png';
 
 const MyProfilePage = () => {
@@ -13,17 +13,17 @@ const MyProfilePage = () => {
       <header className="cover-header">
         <div className="logo">
           {!logoError ? (
-            <img 
-              src={cicLogo} 
-              alt="CIC GROUP" 
+            <img
+              src={cicLogo}
+              alt="CIC GROUP"
               onError={() => setLogoError(true)}
               style={{ height: 48 }}
             />
           ) : (
-            <div style={{ 
-              fontWeight: 'bold', 
-              fontSize: '1.5rem', 
-              color: '#800000' 
+            <div style={{
+              fontWeight: 'bold',
+              fontSize: '1.5rem',
+              color: '#800000'
             }}>
               CIC GROUP
             </div>
@@ -106,11 +106,11 @@ const MyProfilePage = () => {
         <div className="footer-content">
           <p>Let us guide you through your life's journey</p>
           <p className="contact-info">
-            Call us directly on 0703 099 120 or Email us at <a 
-              href="mailto:callc@cic.co.ke" 
-              style={{ 
-                color: 'white', 
-                textDecoration: 'underline' 
+            Call us directly on 0703 099 120 or Email us at <a
+              href="mailto:callc@cic.co.ke"
+              style={{
+                color: 'white',
+                textDecoration: 'underline'
               }}
             >
               callc@cic.co.ke

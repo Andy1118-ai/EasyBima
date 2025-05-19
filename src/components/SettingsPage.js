@@ -1,9 +1,9 @@
-import React, { useState, useContext } from 'react';
-import { ThemeContext } from '../App';
+import React, { useState, useContext, useEffect } from 'react';
+import { ThemeContext } from '../ThemeContext';
 import cicLogo from '../assets/cic_insurance.png';
 
 const SettingsPage = () => {
-  const { theme } = useContext(ThemeContext);
+  const { theme, toggleTheme } = useContext(ThemeContext);
 
   // State for profile info
   const [profile, setProfile] = useState({ name: 'John Doe', email: 'john.doe@email.com' });
@@ -20,8 +20,8 @@ const SettingsPage = () => {
   const [smsNotif, setSmsNotif] = useState(true);
   const [notifMsg, setNotifMsg] = useState('');
 
-  // State for theme
-  const [darkMode, setDarkMode] = useState(false);
+  // Derive darkMode from theme context
+  const darkMode = theme === 'dark';
 
   // State for delete confirmation
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -69,8 +69,7 @@ const SettingsPage = () => {
   };
 
   const handleThemeToggle = () => {
-    setDarkMode((v) => !v);
-    // Optionally persist theme
+    toggleTheme();
   };
 
   const handleDeleteAccount = () => {
@@ -117,8 +116,15 @@ const SettingsPage = () => {
               color: darkMode ? '#fff' : '#800000',
               fontSize: 20,
               cursor: 'pointer',
-              outline: 'none'
+              outline: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '8px',
+              borderRadius: '50%',
+              transition: 'background-color 0.3s'
             }}
+            title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
           >
             {darkMode ? '🌙' : '☀️'}
           </button>

@@ -7,17 +7,17 @@ import { initializeSession } from '../utils/sessionManager';
 import { getNotifications, markAsRead, markAllAsRead, NOTIFICATION_TYPES, addNotification } from '../utils/notificationManager';
 import Chart from 'chart.js/auto';
 import ProductSelectionModal from './productselectionmodule';
-import { ThemeContext } from '../App';
+import { ThemeContext } from '../ThemeContext';
 
 function Dashboard() {
-  const { theme, setTheme } = useContext(ThemeContext);
+  const { theme, toggleTheme } = useContext(ThemeContext);
   const navigate = useNavigate();
   const location = useLocation();
   const quoteData = location.state || null;
-  
+
   // Get complete user data from localStorage
   const storedUser = JSON.parse(localStorage.getItem('registrationData') || '{}');
-  
+
   const [userData, setUserData] = useState({
     name: storedUser.firstName || 'User',
     email: storedUser.email || '',
@@ -71,38 +71,42 @@ function Dashboard() {
   const [showPayPremiumModal, setShowPayPremiumModal] = useState(false);
 
   // Update NewPolicyModal to use ProductSelectionModal
-  const NewPolicyModal = () => showNewPolicyModal && (
-    <div className="modal-overlay" style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      zIndex: 1000
-    }}>
-      <div className="modal-content" style={{
-        backgroundColor: 'white',
-        padding: '20px',
-        borderRadius: '8px',
-        boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
-        maxWidth: '600px',
-        width: '90%'
+  const NewPolicyModal = () => {
+    if (!showNewPolicyModal) return null;
+
+    return (
+      <div className="modal-overlay" style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 1000
       }}>
-        <ProductSelectionModal
-          open={true}
-          onClose={() => setShowNewPolicyModal(false)}
-          onSelect={(product) => {
-            setShowNewPolicyModal(false);
-            alert(`You selected: ${product}`);
-          }}
-        />
+        <div className="modal-content" style={{
+          backgroundColor: 'white',
+          padding: '20px',
+          borderRadius: '8px',
+          boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
+          maxWidth: '600px',
+          width: '90%'
+        }}>
+          <ProductSelectionModal
+            open={true}
+            onClose={() => setShowNewPolicyModal(false)}
+            onSelect={(product) => {
+              setShowNewPolicyModal(false);
+              alert(`You selected: ${product}`);
+            }}
+          />
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   const PayPremiumModal = () => showPayPremiumModal && (
     <div className="modal-overlay" style={{
@@ -392,7 +396,7 @@ function Dashboard() {
       const currentData = JSON.parse(localStorage.getItem('registrationData') || '{}');
       const newData = { ...currentData, ...updatedData };
       localStorage.setItem('registrationData', JSON.stringify(newData));
-      
+
       // Update state
       setUserData(prev => ({
         ...prev,
@@ -643,20 +647,26 @@ function Dashboard() {
           <label style={{ display: 'block', marginBottom: '10px', fontWeight: 'bold', color: '#555' }}>
             Theme:
           </label>
-          <select
-            onChange={(e) => setTheme(e.target.value)}
-            value={theme}
-            style={{
-              width: '100%',
-              padding: '10px',
-              borderRadius: '8px',
-              border: '1px solid #ccc',
-              fontSize: '1rem'
-            }}
-          >
-            <option value="light">Light</option>
-            <option value="dark">Dark</option>
-          </select>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <span>{theme === 'light' ? 'Light' : 'Dark'} Mode</span>
+            <button
+              onClick={toggleTheme}
+              style={{
+                background: theme === 'light' ? '#f0f0f0' : '#333',
+                color: theme === 'light' ? '#333' : '#fff',
+                border: '1px solid #ccc',
+                borderRadius: '8px',
+                padding: '8px 16px',
+                cursor: 'pointer',
+                fontSize: '0.9rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}
+            >
+              {theme === 'light' ? '🌙 Switch to Dark' : '☀️ Switch to Light'}
+            </button>
+          </div>
         </div>
         <div style={{ marginBottom: '20px' }}>
           <label style={{ display: 'block', marginBottom: '10px', fontWeight: 'bold', color: '#555' }}>
@@ -849,12 +859,12 @@ function Dashboard() {
       {/* Flex container for sidebar and main content */}
       <div style={{ display: 'flex', flexDirection: 'row', minHeight: '100vh' }}>
         {/* Sidebar */}
-        <div className="sidebar" style={{ 
-          minHeight: '100vh', 
-          height: '100vh', 
+        <div className="sidebar" style={{
+          minHeight: '100vh',
+          height: '100vh',
           width: '260px',
-          display: 'flex', 
-          flexDirection: 'column', 
+          display: 'flex',
+          flexDirection: 'column',
           justifyContent: 'flex-start',
           background: 'linear-gradient(180deg, #882323 60%, #a94442 100%)',
           padding: '1.5rem 0.5rem 1rem 0.5rem',

@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { ThemeContext } from '../App';
+import { ThemeContext } from '../ThemeContext';
 import FAQSection from './shared/FAQSection';
 import '../styles/auth.css';
 import '../styles/faqs.css';
@@ -16,9 +16,9 @@ const FAQs = () => {
       <header className="faqs-header">
         <div className="faqs-logo">
           {!logoError ? (
-            <img 
-              src={cicLogo} 
-              alt="CIC GROUP" 
+            <img
+              src={cicLogo}
+              alt="CIC GROUP"
               onError={() => setLogoError(true)}
             />
           ) : (
@@ -37,7 +37,7 @@ const FAQs = () => {
 
       <main className="faqs-content-wrap">
         {/* Main FAQ Section using the shared component */}
-        <FAQSection 
+        <FAQSection
           showTitle={true}
           showCategories={true}
           showSearch={true}
@@ -49,8 +49,8 @@ const FAQs = () => {
         <div className="faqs-footer-content">
           <p>Let us guide you through your life's journey</p>
           <p className="faqs-contact-info">
-            Call us directly on <span>0703 099 120</span> or Email us at <a 
-              href="mailto:callc@cic.co.ke" 
+            Call us directly on <span>0703 099 120</span> or Email us at <a
+              href="mailto:callc@cic.co.ke"
               className="faqs-footer-email"
             >
               callc@cic.co.ke
