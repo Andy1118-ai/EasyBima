@@ -95,15 +95,18 @@ const withModal = (WrappedComponent, options = {}) => {
 
     // Add event listeners when the modal is open
     useEffect(() => {
-      if (isOpen) {
-        document.addEventListener('mousedown', handleOutsideClick);
-        document.addEventListener('keydown', handleKeyDown);
-        
-        // Prevent scrolling of the body when modal is open
-        document.body.style.overflow = 'hidden';
-        
-        // Focus trap - focus the first focusable element in the modal
-        const focusableElements = modalRef.current?.querySelectorAll(
+      if (!isOpen) return;
+
+      const currentModalRef = modalRef.current;
+      document.addEventListener('mousedown', handleOutsideClick);
+      document.addEventListener('keydown', handleKeyDown);
+      
+      // Prevent scrolling of the body when modal is open
+      document.body.style.overflow = 'hidden';
+      
+      // Focus trap - focus the first focusable element in the modal
+      if (currentModalRef) {
+        const focusableElements = currentModalRef.querySelectorAll(
           'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
         );
         

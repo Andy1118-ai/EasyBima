@@ -1,18 +1,21 @@
 import React, { useState } from 'react';
 import DatePickerManager, { DateTimePickerManager } from '../shared/DatePickerManager';
-import { DateRangeCalendar, MonthPicker, TimePicker } from '../shared/Calendar';
-import ModalDatePicker from '../shared/ModalDatePicker';
-import ModalDateRangePicker from '../shared/ModalDateRangePicker';
-import withModal from '../shared/withModal';
+import {
+  Calendar,
+  DateRangeCalendar,
+  MonthPicker,
+  TimePicker,
+  ModalCalendar,
+  ModalDateRangeCalendar,
+  ModalMonthPicker,
+  ModalTimePicker
+} from '../shared/DatePicker';
 import { getLocalTimeZone, formatDate } from '../../utils/dateUtils';
 import { registerLocale } from 'react-datepicker';
 import enGB from 'date-fns/locale/en-GB';
 import es from 'date-fns/locale/es';
 import fr from 'date-fns/locale/fr';
 import './DatePickerExample.css';
-
-// Create a modal version of MonthPicker using the withModal HOC
-const ModalMonthPicker = withModal(MonthPicker, { modalTitle: 'Select Month' });
 
 // Register some locales for the examples
 registerLocale('en-GB', enGB);
@@ -242,7 +245,7 @@ const DatePickerExample = () => {
           <p className="section-description">
             This date picker appears in a modal dialog in the center of the screen when clicked.
           </p>
-          <ModalDatePicker
+          <ModalCalendar
             selectedDate={modalDate}
             onChange={setModalDate}
             label="Select Date (Modal)"
@@ -265,7 +268,7 @@ const DatePickerExample = () => {
           <p className="section-description">
             This date & time picker appears in a modal dialog with time selection.
           </p>
-          <ModalDatePicker
+          <ModalCalendar
             selectedDate={modalDateTime}
             onChange={setModalDateTime}
             label="Select Date & Time (Modal)"
@@ -291,7 +294,7 @@ const DatePickerExample = () => {
           <p className="section-description">
             This date range picker appears in a modal dialog in the center of the screen.
           </p>
-          <ModalDateRangePicker
+          <ModalDateRangeCalendar
             startDate={modalDateRange.startDate}
             endDate={modalDateRange.endDate}
             onChangeStart={handleModalStartDateChange}

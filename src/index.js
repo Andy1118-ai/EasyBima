@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext, useCallback } from 'react';
-import { ThemeContext } from './ThemeContext';
+import { ThemeContext, ThemeProvider } from './ThemeContext';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route, Link, Navigate, useNavigate } from 'react-router-dom';
-import './styles/auth.css';
+import './styles/main.css';
 import logo from './assets/enhanced/cic_insurance.png';
 import picture1 from './assets/picture1.jpg';
 import picture2 from './assets/picture2.jpg';
@@ -97,7 +97,7 @@ class ErrorBoundary extends React.Component {
 function LoginSignup() {
   const { theme } = useContext(ThemeContext);
   const navigate = useNavigate();
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [passwordVisible, setPasswordVisible] = useState(false);
   // eslint-disable-next-line no-unused-vars
   const [_isLoading, setIsLoading] = useState(true);
@@ -154,7 +154,7 @@ function LoginSignup() {
     if (isTransitioning) return;
     setIsTransitioning(true);
     setTimeout(() => {
-      setCurrentSlide((prevSlide) => (prevSlide + 1) % slides.length);
+      setCurrentImageIndex((prevSlide) => (prevSlide + 1) % slides.length);
       setIsTransitioning(false);
     }, 50);
   }, [slides.length, isTransitioning]);
@@ -163,7 +163,7 @@ function LoginSignup() {
     if (isTransitioning) return;
     setIsTransitioning(true);
     setTimeout(() => {
-      setCurrentSlide((prevSlide) => (prevSlide - 1 + slides.length) % slides.length);
+      setCurrentImageIndex((prevSlide) => (prevSlide - 1 + slides.length) % slides.length);
       setIsTransitioning(false);
     }, 50);
   }, [slides.length, isTransitioning]);
@@ -217,23 +217,15 @@ function LoginSignup() {
     const preloadImages = async () => {
       try {
         setIsLoading(true);
-
-        // Create an array to track loading progress
         const totalImages = slides.length;
         let loadedImages = 0;
-
         await Promise.all(slides.map(slide => {
           return new Promise((resolve, reject) => {
             const img = new Image();
-
-            // Set image loading attributes for high quality
             img.setAttribute('importance', 'high');
             img.setAttribute('loading', 'eager');
             img.setAttribute('decoding', 'sync');
-
-            // Set source and event handlers
             img.src = slide.image;
-
             img.onload = () => {
               loadedImages++;
               if (isMounted) {
@@ -242,11 +234,9 @@ function LoginSignup() {
               }
               resolve();
             };
-
             img.onerror = reject;
           });
         }));
-
         if (isMounted) {
           setIsLoading(false);
         }
@@ -258,10 +248,7 @@ function LoginSignup() {
         }
       }
     };
-
     preloadImages();
-
-    // Cleanup function to prevent state updates on unmounted component
     return () => {
       isMounted = false;
     };
@@ -269,22 +256,21 @@ function LoginSignup() {
 
   // Fix slider auto-rotation to prevent DOM errors
   useEffect(() => {
+    let interval;
     if (!isPaused) {
-      const interval = setInterval(() => {
+      interval = setInterval(() => {
         // Only proceed if document is visible and not in transition
         if (document && !document.hidden && !isTransitioning) {
-          nextSlide();
+          setCurrentImageIndex((prevIndex) => (prevIndex + 1) % slides.length);
         }
-      }, 3000);
-
-      // Cleanup interval on component unmount or dependency change
-      return () => {
-        clearInterval(interval);
-      };
+      }, 5000);
     }
-    // Return empty cleanup function when paused to maintain consistent return
-    return () => {};
-  }, [isPaused, nextSlide, isTransitioning]);
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
+  }, [isPaused, slides.length, isTransitioning]);
 
   const formatPhoneNumber = (value) => {
     const numbers = value.replace(/\D/g, '');
@@ -670,62 +656,102 @@ function LoginSignup() {
     return errors;
   };
 
+  // Update the parallax effect
+  const handleScroll = useCallback((e) => {
+    const scrolled = e.target.scrollTop;
+    const parallaxElements = document.querySelectorAll('.parallax-content');
+    if (parallaxElements) {
+      parallaxElements.forEach(element => {
+        if (element && element.style) {
+          element.style.transform = `translateY(${scrolled * 0.5}px)`;
+        }
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    const container = document.querySelector('.left-panel');
+    if (container) {
+      container.addEventListener('scroll', handleScroll);
+      return () => {
+        if (container) {
+          container.removeEventListener('scroll', handleScroll);
+        }
+      };
+    }
+  }, [handleScroll]);
+
   return (
     <div className={`login-signup-page ${theme}-mode`}>
       <div className="split-screen" style={{ display: 'flex', flexDirection: 'row', minHeight: '100vh' }}>
         <div
-          className="left-panel"
+          className="left-panel gradient-bg"
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
           style={{ position: 'relative', flex: 1, minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}
         >
-          <img
-            src={slides[currentSlide].image}
-            alt={slides[currentSlide].description}
-            className="slider-image"
-            style={{ width: '100%', height: '100vh', objectFit: 'cover', objectPosition: 'center', transition: 'transform 8s ease-out, opacity 0.8s ease-in-out', transform: isTransitioning ? 'scale(1)' : 'scale(1.05)', opacity: isTransitioning ? 0.8 : 1, filter: 'brightness(0.7) saturate(1.1)', position: 'absolute', top: 0, left: 0 }}
-            loading="eager"
-            decoding="sync"
-          />
-          <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.3), rgba(0,0,0,0.7))', zIndex: 1 }} />
-          <div className="slide-description" style={{ zIndex: 2, position: 'absolute', bottom: 30, left: 0, width: '100%', color: '#fff', textAlign: 'center', fontSize: '1.2rem', fontWeight: 500, textShadow: '0 2px 8px rgba(0,0,0,0.4)' }}>
-            {slides[currentSlide].description}
-          </div>
-          <div className="slider-controls" style={{ zIndex: 3, position: 'absolute', bottom: 10, left: 0, width: '100%', display: 'flex', justifyContent: 'center', gap: 8 }}>
-            {slides.map((_, index) => (
-              <div
-                key={index}
-                className={`slide-dot ${currentSlide === index ? 'active' : ''}`}
-                style={{ width: 12, height: 12, borderRadius: '50%', background: currentSlide === index ? '#fff' : 'rgba(255,255,255,0.5)', margin: '0 4px', cursor: 'pointer', border: currentSlide === index ? '2px solid #800000' : 'none' }}
-                onClick={() => {
-                  if (!isTransitioning) {
-                    setIsTransitioning(true);
-                    setTimeout(() => {
-                      setCurrentSlide(index);
-                      setIsTransitioning(false);
-                    }, 500);
-                  }
+          <div className="slider-container">
+            {slides.map((slide, index) => (
+              <img
+                key={slide.image}
+                src={slide.image}
+                alt={`Slide ${index + 1}`}
+                className={`slider-image ${index === currentImageIndex ? 'active' : ''}`}
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  opacity: index === currentImageIndex ? 1 : 0,
+                  transition: 'opacity 1s ease-in-out'
                 }}
               />
             ))}
           </div>
+          <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.3), rgba(0,0,0,0.7))', zIndex: 1 }} />
+          <div className="slide-description" style={{ zIndex: 2, position: 'absolute', bottom: 30, left: 0, width: '100%', color: '#fff', textAlign: 'center', fontSize: '1.2rem', fontWeight: 500, textShadow: '0 2px 8px rgba(0,0,0,0.4)' }}>
+            {slides[currentImageIndex].description}
+          </div>
+          <div className="slider-controls" style={{ zIndex: 3, position: 'absolute', bottom: 10, left: 0, width: '100%', display: 'flex', justifyContent: 'center', gap: 8 }}>
+            {slides.map((slide, index) => (
+              <div
+                key={slide.image}
+                className={`slide-dot ${currentImageIndex === index ? 'active' : ''}`}
+                style={{
+                  width: 12,
+                  height: 12,
+                  borderRadius: '50%',
+                  background: currentImageIndex === index ? '#fff' : 'rgba(255,255,255,0.5)',
+                  margin: '0 4px',
+                  cursor: 'pointer',
+                  border: currentImageIndex === index ? '2px solid #800000' : 'none',
+                  transition: 'all 0.3s ease'
+                }}
+                onClick={() => setCurrentImageIndex(index)}
+              />
+            ))}
+          </div>
         </div>
-        <div className="right-panel" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', background: '#f6f7fa' }}>
-          <div className="login-container" style={{
-            padding: '30px',
-            maxWidth: '450px',
-            margin: '0 auto',
-            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-            borderRadius: '10px',
-            backgroundColor: '#fff'
+        <div className="right-panel" style={{
+            flex: 1,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            minHeight: '100vh',
+            background: '#f6f7fa'
           }}>
+          <div className="login-container">
+            <h1 className="floating" style={{ textAlign: 'center', marginBottom: '0', color: '#222', fontWeight: 700, fontSize: '2rem' }}>Welcome to CIC Insurance</h1>
+            <p className="floating" style={{ textAlign: 'center', marginTop: '0', marginBottom: '20px', color: '#555', fontSize: '1.1rem' }}>Your trusted insurance partner</p>
             <img src={logo} alt="cic insurance" className="logo" style={{ display: 'block', margin: '0 auto 20px', maxWidth: '150px' }} />
             <h1 style={{ textAlign: 'center', marginBottom: '10px', color: '#800000' }}>Sign in to CIC EasyBima</h1>
             <p className="tagline" style={{ textAlign: 'center', marginBottom: '30px', color: '#666' }}>Getting insured with us is easy as 1-2-3</p>
 
             {loginError && (
-              <div className="error-message" style={{
+              <div className="error-message error-shake" style={{
                 color: '#721c24',
                 backgroundColor: '#f8d7da',
                 padding: '10px 15px',
@@ -776,7 +802,7 @@ function LoginSignup() {
                     placeholder={formData.userType === USER_TYPES.INTERMEDIARY
                       ? "Enter your KRA PIN"
                       : "Enter your ID/Passport Number"}
-                    className={formErrors.idNumber ? 'error' : ''}
+                    className={formErrors.idNumber ? 'error error-shake' : ''}
                     required
                     style={{
                       width: '100%',
@@ -788,17 +814,8 @@ function LoginSignup() {
                     onFocus={handleInputFocus}
                     onBlur={handleInputBlur}
                   />
-                  {validatedFields.idNumber && (
-                    <div className={`validation-icon ${validatedFields.idNumber}`} style={{
-                      position: 'absolute',
-                      right: '10px',
-                      top: '50%',
-                      transform: 'translateY(-50%)',
-                      width: '20px',
-                      height: '20px',
-                      background: validatedFields.idNumber === 'valid' ? 'green' : 'red',
-                      borderRadius: '50%'
-                    }}></div>
+                  {validatedFields.idNumber === 'valid' && (
+                    <span className="success-checkmark">✓</span>
                   )}
                 </div>
                 {formErrors.idNumber && (
@@ -826,7 +843,7 @@ function LoginSignup() {
                     value={formData.password}
                     onChange={handleInputChange}
                     placeholder="Enter your password"
-                    className={formErrors.password ? 'error' : ''}
+                    className={formErrors.password ? 'error error-shake' : ''}
                     required
                     style={{
                       width: '100%',
@@ -838,17 +855,8 @@ function LoginSignup() {
                     onFocus={handleInputFocus}
                     onBlur={handleInputBlur}
                   />
-                  {validatedFields.password && (
-                    <div className={`validation-icon ${validatedFields.password}`} style={{
-                      position: 'absolute',
-                      right: '40px',
-                      top: '50%',
-                      transform: 'translateY(-50%)',
-                      width: '20px',
-                      height: '20px',
-                      background: validatedFields.password === 'valid' ? 'green' : 'red',
-                      borderRadius: '50%'
-                    }}></div>
+                  {validatedFields.password === 'valid' && (
+                    <span className="success-checkmark">✓</span>
                   )}
                   <button
                     type="button"
@@ -929,25 +937,8 @@ function LoginSignup() {
 }
 
 export default function AppWrapper() {
-  // Move theme state and effect here
-  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light');
-
-  useEffect(() => {
-    document.body.classList.remove('theme-dark', 'theme-light');
-    document.body.classList.add(theme === 'dark' ? 'theme-dark' : 'theme-light');
-    localStorage.setItem('theme', theme);
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme(prevTheme => {
-      const newTheme = prevTheme === 'light' ? 'dark' : 'light';
-      localStorage.setItem('theme', newTheme);
-      return newTheme;
-    });
-  };
-
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, toggleTheme }}>
+    <ThemeProvider>
       <BrowserRouter>
         <ErrorBoundary>
           <Routes>
@@ -972,7 +963,7 @@ export default function AppWrapper() {
           </Routes>
         </ErrorBoundary>
       </BrowserRouter>
-    </ThemeContext.Provider>
+    </ThemeProvider>
   );
 }
 

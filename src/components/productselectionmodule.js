@@ -55,13 +55,9 @@ function ProductSelectionModal({ open, onClose, onSelect }) {
   if (!open) return null;
 
   const handleProductClick = (product) => {
-    // First close the modal
+    // Navigate first, then close the modal
+    navigate('/quoteformsummary', { state: { product } });
     onClose();
-
-    // Then navigate after a short delay to ensure the modal is fully unmounted
-    setTimeout(() => {
-      navigate('/quoteformsummary', { state: { product } });
-    }, 50);
   };
 
   return (

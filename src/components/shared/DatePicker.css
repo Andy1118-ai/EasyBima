@@ -1,0 +1,28 @@
+/* 
+ * DatePicker.css
+ * Consolidated styles for all date picker components
+ */
+
+/* Import base calendar styles */
+@import './Calendar.css';
+@import './ModalDatePicker.css';
+
+/* Additional styles for the unified DatePicker module */
+.date-picker-container {
+  margin-bottom: 1rem;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .modal-date-picker-dialog {
+    max-width: 90%;
+  }
+  
+  .date-range-container {
+    flex-direction: column;
+  }
+  
+  .date-input-group {
+    margin-bottom: 1rem;
+  }
+}

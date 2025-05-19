@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import Calendar from '../shared/Calendar';
+import { Calendar } from '../shared/DatePicker';
+import { formatDate, getLocalTimeZone } from '../../utils/dateUtils';
 
 const CalendarExample = () => {
   const [selectedDate, setSelectedDate] = useState(null);
@@ -17,10 +18,10 @@ const CalendarExample = () => {
         placeholderText="Select a date"
       />
       {selectedDate && (
-        <p>Selected date: {selectedDate.toLocaleDateString()}</p>
+        <p>Selected date: {formatDate(selectedDate, 'MMMM d, yyyy', { timeZone: getLocalTimeZone() })}</p>
       )}
     </div>
   );
 };
 
-export default CalendarExample; 
+export default CalendarExample;
