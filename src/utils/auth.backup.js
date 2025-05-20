@@ -109,13 +109,9 @@ export const login = async (userData) => {
     // In a real app, this would make an API call
     // For demo purposes, we're just simulating a successful login
     
-    // Set expiration time (24 hours from now)
-    const expiresAt = new Date().getTime() + (24 * 60 * 60 * 1000);
-    
     // Store authentication data
     sessionStorage.setItem('isAuthenticated', 'true');
     localStorage.setItem('authToken', 'demo-token-123');
-    localStorage.setItem('expiresAt', expiresAt.toString());
     localStorage.setItem('user', JSON.stringify({
       id: userData.identifier,
       userType: userData.userType
@@ -205,4 +201,3 @@ export const getIdentifierPlaceholder = (userType) => {
     ? 'Enter your KRA PIN' 
     : 'Enter your ID/Passport Number';
 };
-

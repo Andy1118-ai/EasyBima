@@ -87,9 +87,14 @@ body {
 }
 
 .logo {
-  width: 120px;
+  width: 120px !important;
+  height: 120px !important;
+  max-width: 90vw !important;
+  max-height: 120px !important;
   margin-bottom: 20px;
   animation: float 3s ease-in-out infinite;
+  object-fit: contain;
+  display: block;
 }
 
 .login-header h2 {
