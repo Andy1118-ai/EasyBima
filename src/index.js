@@ -18,8 +18,6 @@ import Register from './components/register';
 import QuoteFormSummary from './components/quoteformsummary';
 import App from './App';
 import FAQs from './components/FAQs';
-import CalendarExample from './components/examples/CalendarExample';
-import DatePickerExample from './components/examples/DatePickerExample';
 import AnalyticsPage from './components/AnalyticsPage';
 import MyProfilePage from './components/MyProfilePage';
 import PoliciesPage from './components/PoliciesPage';
@@ -27,6 +25,7 @@ import ClaimsPage from './components/ClaimsPage';
 import PaymentsPage from './components/PaymentsPage';
 import SupportPage from './components/SupportPage';
 import SettingsPage from './components/SettingsPage';
+import DatePickerDemo from './components/DatePickerDemo';
 
 // Import authentication utilities
 import {
@@ -632,8 +631,7 @@ export default function AppWrapper() {
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/register" element={<Register />} />
             <Route path="/quoteformsummary" element={<QuoteFormSummary />} />
-            <Route path="/calendar" element={<CalendarExample />} />
-            <Route path="/datepicker" element={<DatePickerExample />} />
+            <Route path="/datepicker" element={<DatePickerDemo />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </ErrorBoundary>

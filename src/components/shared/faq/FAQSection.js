@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { getFAQsByCategory, faqCategories, searchFAQs } from '../../../data/FAQData';
-import '../../styles/auth.css';
+import '../../../styles/auth.css';
 
 /**
  * Reusable FAQ Section component that can be used across the application
  * @param {Object} props - Component props
  * @param {boolean} props.showTitle - Whether to show the main title (default: true)
- * @param {boolean} props.showCategories - Whether to show category filters (default: true) 
+ * @param {boolean} props.showCategories - Whether to show category filters (default: true)
  * @param {boolean} props.showSearch - Whether to show search input (default: true)
  * @param {boolean} props.showContactCTA - Whether to show contact CTA section (default: true)
  * @param {string} props.defaultCategory - Default category to show (default: 'all')
  * @param {number} props.maxItems - Maximum number of FAQs to display (default: all)
  * @param {string} props.categoryFilter - Only show FAQs from this category (overrides user selection)
  */
-const FAQSection = ({ 
-  showTitle = true, 
-  showCategories = true, 
+const FAQSection = ({
+  showTitle = true,
+  showCategories = true,
   showSearch = true,
   showContactCTA = true,
   defaultCategory = 'all',
@@ -23,12 +23,12 @@ const FAQSection = ({
   categoryFilter = null
 }) => {
   // Get initial FAQs to initialize activeItems correctly
-  const initialFaqs = categoryFilter 
-    ? getFAQsByCategory(categoryFilter) 
+  const initialFaqs = categoryFilter
+    ? getFAQsByCategory(categoryFilter)
     : getFAQsByCategory(defaultCategory);
-  
-  const initialMaxedFaqs = maxItems && initialFaqs.length > maxItems 
-    ? initialFaqs.slice(0, maxItems) 
+
+  const initialMaxedFaqs = maxItems && initialFaqs.length > maxItems
+    ? initialFaqs.slice(0, maxItems)
     : initialFaqs;
 
   // State to track which FAQ items are open - initialize with all current FAQ IDs set to false
@@ -39,7 +39,7 @@ const FAQSection = ({
     });
     return initialState;
   });
-  
+
   const [activeCategory, setActiveCategory] = useState(categoryFilter || defaultCategory);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredFaqs, setFilteredFaqs] = useState(initialMaxedFaqs);
@@ -55,7 +55,7 @@ const FAQSection = ({
   // Update filtered FAQs when category or search changes
   useEffect(() => {
     let results = [];
-    
+
     if (searchTerm.trim()) {
       // Search takes precedence over category
       results = searchFAQs(searchTerm);
@@ -64,12 +64,12 @@ const FAQSection = ({
       const effectiveCategory = categoryFilter || activeCategory;
       results = getFAQsByCategory(effectiveCategory);
     }
-    
+
     // Apply maxItems limit if specified
     if (maxItems && results.length > maxItems) {
       results = results.slice(0, maxItems);
     }
-    
+
     // Update activeItems with any new FAQs that weren't in the previous state
     setActiveItems(prev => {
       const newState = {...prev};
@@ -80,7 +80,7 @@ const FAQSection = ({
       });
       return newState;
     });
-    
+
     setFilteredFaqs(results);
   }, [activeCategory, searchTerm, maxItems, categoryFilter]);
 
@@ -100,11 +100,11 @@ const FAQSection = ({
   return (
     <div className="faq-section">
       {showTitle && <h2>Frequently Asked Questions</h2>}
-      
+
       {/* Search input */}
       {showSearch && (
-        <div className="faq-search" style={{ 
-          margin: '20px auto', 
+        <div className="faq-search" style={{
+          margin: '20px auto',
           maxWidth: '500px',
           position: 'relative'
         }}>
@@ -133,11 +133,11 @@ const FAQSection = ({
           }}>🔍</span>
         </div>
       )}
-      
+
       {/* Category filters */}
       {showCategories && !categoryFilter && (
-        <div className="faq-categories" style={{ 
-          display: 'flex', 
+        <div className="faq-categories" style={{
+          display: 'flex',
           justifyContent: 'center',
           flexWrap: 'wrap',
           gap: '10px',
@@ -164,16 +164,16 @@ const FAQSection = ({
           ))}
         </div>
       )}
-      
+
       {/* FAQ items */}
       <div className="faq-container">
         {filteredFaqs.length > 0 ? (
           filteredFaqs.map((faq) => (
-            <div 
-              key={faq.id} 
+            <div
+              key={faq.id}
               className={`faq-item ${activeItems[faq.id] ? 'active' : ''}`}
             >
-              <div 
+              <div
                 className="faq-question"
                 onClick={() => toggleItem(faq.id)}
               >
@@ -187,8 +187,8 @@ const FAQSection = ({
         ) : (
           <div style={{ textAlign: 'center', padding: '30px 20px' }}>
             <p style={{ color: '#666', fontSize: '16px' }}>
-              {searchTerm 
-                ? "No FAQs match your search. Please try different keywords or browse by category." 
+              {searchTerm
+                ? "No FAQs match your search. Please try different keywords or browse by category."
                 : "No FAQs available in this category."}
             </p>
           </div>
@@ -197,8 +197,8 @@ const FAQSection = ({
 
       {/* Contact CTA */}
       {showContactCTA && (
-        <div style={{ 
-          margin: '40px auto', 
+        <div style={{
+          margin: '40px auto',
           textAlign: 'center',
           padding: '20px',
           backgroundColor: '#f9f9f9',
@@ -210,8 +210,8 @@ const FAQSection = ({
             Our customer support team is ready to assist you with any questions you may have.
           </p>
           <div style={{ display: 'flex', justifyContent: 'center', gap: '15px', flexWrap: 'wrap' }}>
-            <a 
-              href="tel:0703099120" 
+            <a
+              href="tel:0703099120"
               style={{
                 padding: '10px 20px',
                 backgroundColor: '#A92219',
@@ -223,8 +223,8 @@ const FAQSection = ({
             >
               Call Us
             </a>
-            <a 
-              href="mailto:callc@cic.co.ke" 
+            <a
+              href="mailto:callc@cic.co.ke"
               style={{
                 padding: '10px 20px',
                 backgroundColor: '#A92219',
@@ -243,4 +243,4 @@ const FAQSection = ({
   );
 };
 
-export default FAQSection; 
+export default FAQSection;

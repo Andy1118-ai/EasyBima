@@ -1,13 +1,17 @@
-/* 
+/*
  * main.css
  * Consolidated styles for the application
  */
 
 /* Import all component styles */
 @import './auth.css';
+@import './dashboard.css';
+@import './coverpage.css';
+@import './register.css';
 @import './claims.css';
 @import './faqs.css';
 @import './theme.css';
+@import './theme-legacy.css'; /* Legacy theme styles for backward compatibility */
 @import './loginpage.css';
 
 /* Common styles */
@@ -25,7 +29,7 @@
   --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   --transition-speed: 0.3s;
   --border-radius: 5px;
-  --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, 'Roboto', Arial, sans-serif, 'Helvetica Neue', sans-serif;
 }
 
 /* Dark mode variables */

@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import DatePickerManager from './shared/date/DatePickerManager';
+import DatePicker from '../components/shared/date picker';
 import './quoteformsummary.css';
-import './shared/date/DatePickerManager.css';
+import '../components/shared/datepicker.css';
 import { ThemeContext } from '../ThemeContext';
 
 // Common fields used across multiple forms
@@ -347,8 +347,7 @@ const FormField = ({ field, form, setForm }) => {
           ))}
         </select>
       ) : field.type === 'date' ? (
-        <DatePickerManager
-          type={field.name === 'dob' ? 'birth' : 'policy'}
+        <DatePicker
           form={form}
           setForm={setForm}
           name={field.name}
