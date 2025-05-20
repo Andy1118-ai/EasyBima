@@ -11,7 +11,7 @@ function NotificationCenter({ show, notifications, onClose, onMarkAsRead, onMark
       case 'payment': return '💰';
       case 'claim': return '🛡️';
       case 'system': return '⚙️';
-      case 'alert': return '⚠️';
+      case 'alert': return '🚨';
       default: return '📌';
     }
   };

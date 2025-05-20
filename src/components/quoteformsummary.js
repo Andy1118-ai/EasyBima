@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import DatePicker from '../components/shared/date picker';
+import ModernReceipt from './shared/Receipt';
 import './quoteformsummary.css';
 import '../components/shared/datepicker.css';
 import { ThemeContext } from '../ThemeContext';
@@ -68,6 +69,7 @@ const productFormFields = {
     { name: 'gender', label: 'Gender', type: 'select', options: ['--Select--','Male', 'Female'], required: true },
     { name: 'maritalStatus', label: 'Marital Status', type: 'select', options: ['--Select--','Single', 'Married', 'Divorced', 'Widowed'], required: true },
     { name: 'spouse', label: 'Do you have and want to insure your spouse?', type: 'select', options: ['--Select--','No', 'Yes'], required: true },
+    { name: 'spouseDob', label: 'Spouse Date of Birth', type: 'date', placeholder: 'Pick Spouse Date of Birth', required: false, showWhen: { field: 'spouse', value: 'Yes' } },
   ],
   'CIC Family Medisure': [
     ...commonFields.contactInfo,
@@ -75,7 +77,9 @@ const productFormFields = {
     { name: 'gender', label: 'Gender', type: 'select', options: ['--Select--','Male', 'Female'], required: true },
     { name: 'maritalStatus', label: 'Marital Status', type: 'select', options: ['--Select--','Single', 'Married', 'Divorced', 'Widowed'], required: true },
     { name: 'spouse', label: 'Do you have and want to insure your spouse?', type: 'select', options: ['--Select--','No', 'Yes'], required: true },
+    { name: 'spouseDob', label: 'Spouse Date of Birth', type: 'date', placeholder: 'Pick Spouse Date of Birth', required: false, showWhen: { field: 'spouse', value: 'Yes' } },
     { name: 'children', label: 'Do you have children you want to insure?', type: 'select', options: ['--Select--','No', 'Yes'], required: true },
+
   ],
   'Motor Commercial Insurance': [
     ...commonFields.contactInfo,
@@ -126,6 +130,14 @@ const FormField = ({ field, form, setForm }) => {
         {field.noteHighlight && <span style={{ color: 'red', fontWeight: 600 }}> {field.noteHighlight}</span>}
       </div>
     );
+  }
+
+  // Check if field should be shown based on conditions
+  if (field.showWhen) {
+    const { field: dependentField, value } = field.showWhen;
+    if (form[dependentField] !== value) {
+      return null;
+    }
   }
 
   const handleChange = e => {
@@ -417,100 +429,9 @@ const CoveragePlan = ({ plans, selectedPlan, onSelectPlan }) => {
   );
 };
 
-// Receipt component
-const Receipt = ({ formData, product, quoteAmount, selectedPlan, onClose, onDownload }) => {
-  const today = new Date().toLocaleDateString();
-  const receiptNumber = `CIC-${Math.floor(100000 + Math.random() * 900000)}`;
-  const policyNumber = `POL-${Math.floor(1000000 + Math.random() * 9000000)}`;
 
-  return (
-    <div className="receipt-overlay">
-      <div className="receipt-modal">
-        <div className="receipt-header">
-          <h2>Insurance Policy Receipt</h2>
-          <button className="receipt-close-btn" onClick={onClose}>×</button>
-        </div>
 
-        <div className="receipt-content">
-          <div className="receipt-logo">
-            <img src={require('../assets/cic_insurance.png')} alt="CIC Insurance Group" />
-          </div>
-
-          <div className="receipt-info">
-            <p><strong>Receipt #:</strong> {receiptNumber}</p>
-            <p><strong>Date:</strong> {today}</p>
-            <p><strong>Policy #:</strong> {policyNumber}</p>
-            <p><strong>Agent:</strong> {formData.agent}</p>
-            <p><strong>Branch:</strong> {formData.branch}</p>
-            <p><strong>Payment Method:</strong> {formData.paymentMethod}</p>
-            <p><strong>Policy Status:</strong> <span className="purchase-success">ACTIVE</span></p>
-            <p><strong>Policy Type:</strong> {formData.policyType}</p>
-            <p><strong>Policy Start Date:</strong> {formData.attachmentStart}</p>
-            <p><strong>Policy End Date:</strong> {formData.attachmentEnd}</p>
-
-          </div>
-
-          <div className="receipt-customer">
-            <h3>Customer Details</h3>
-            <p><strong>Name:</strong> {formData.name}</p>
-            <p><strong>Email:</strong> {formData.email}</p>
-            <p><strong>Phone:</strong> {formData.phone}</p>
-            <p><strong>KRA PIN:</strong> {formData.kraPin}</p>
-            <p><strong>ID Number:</strong> {formData.idNumber}</p>
-            <p><strong>Passport Number:</strong> {formData.passportNumber}</p>
-            {formData.idNumber && <p><strong>ID Number:</strong> {formData.idNumber}</p>}
-          </div>
-
-          <div className="receipt-product">
-            <h3>Policy Details</h3>
-            <p><strong>Product:</strong> {product.title}</p>
-            {selectedPlan && (
-              <div className="receipt-plan-details">
-                <p><strong>Plan:</strong> {selectedPlan.name}</p>
-                <p><strong>Coverage:</strong></p>
-                <ul className="plan-features">
-                  {selectedPlan.features.map((feature, idx) => (
-                    <li key={idx}>{feature}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            <p><strong>Premium Amount:</strong> KES {quoteAmount.toLocaleString()}</p>
-            <p><strong>Payment Status:</strong> <span className="purchase-success">PAID</span></p>
-            <p><strong>Coverage Period:</strong> 12 months from {today}</p>
-
-            {product.title === 'Marine Cargo Policy' && (
-              <div className="receipt-cargo-details">
-                <h4>Insured Cargo Details</h4>
-                <p><strong>Goods Category:</strong> {formData.goodsCategory}</p>
-                <p><strong>Goods Description:</strong> {formData.goodsDescription}</p>
-                <p><strong>Value of Goods:</strong> KES {parseFloat(formData.goodsValue.replace(/[^0-9.]/g, '')).toLocaleString()}</p>
-                <p><strong>Mode of Conveyance:</strong> {formData.mode}</p>
-                <p><strong>Origin:</strong> {formData.countryOrigin} ({formData.portOrigin})</p>
-                <p><strong>Destination:</strong> {formData.countryDest} ({formData.portDest})</p>
-                <p><strong>Expected Arrival Date:</strong> {formData.expectedArrival}</p>
-                <p><strong>Expected Departure Date:</strong> {formData.expectedDeparture}</p>
-                <p><strong>Number of Packages:</strong> {formData.numberOfPackages}</p>
-                <p><strong>Package Weight:</strong> {formData.packageWeight}</p>
-                <p><strong>Package Dimensions:</strong> {formData.packageDimensions}</p>
-                <p><strong>Package Contents:</strong> {formData.packageContents}</p>
-                <p><strong>Package Value:</strong> {formData.packageValue}</p>
-              </div>
-            )}
-          </div>
-
-          <div className="receipt-footer">
-            <p>Thank you for choosing CIC Insurance Group!</p>
-            <p>Your policy is now active. A confirmation email has been sent to your email address with full details and policy documentation.</p>
-            <p><strong>For support:</strong> callc@cic.co.ke or +254 703 099 120</p>
-          </div>
-        </div>
-
-        <button className="receipt-download-btn" onClick={onDownload}>Download Receipt</button>
-      </div>
-    </div>
-  );
-};
+export { productCoveragePlans };
 
 export default function QuoteFormSummary() {
   const { theme } = useContext(ThemeContext);
@@ -1014,13 +935,18 @@ export default function QuoteFormSummary() {
         </div>
 
         {showReceipt && (
-          <Receipt
-            formData={form}
-            product={product}
-            quoteAmount={quoteAmount}
-            selectedPlan={selectedPlan}
+          <ModernReceipt
+            data={{
+              ...form,
+              product: product,
+              amount: quoteAmount,
+              plan: selectedPlan,
+              receiptNumber: `CIC-${Math.floor(100000 + Math.random() * 900000)}`,
+              policyNumber: `POL-${Math.floor(1000000 + Math.random() * 9000000)}`
+            }}
             onClose={handleCloseReceipt}
             onDownload={handleDownloadReceipt}
+            type="policy"
           />
         )}
       </div>

@@ -62,6 +62,7 @@ function Dashboard() {
 
   // Check authentication
   useEffect(() => {
+    // Enforce authentication: redirect to login if not authenticated
     if (!isAuthenticated()) {
       navigate('/login');
       return;

@@ -593,11 +593,12 @@ function LoginSignup() {
                 {isSubmitting ? <span className="spinner"></span> : 'Sign In'}
               </button>
 
-              <div style={{ textAlign: 'center', marginTop: '15px' }}>
+              {/* Direct link to dashboard for testing */}
+              {/* <div style={{ textAlign: 'center', marginTop: '15px' }}>
                 <Link to="/dashboard" style={{ color: '#800000', textDecoration: 'underline', fontWeight: 600 }}>
                   Go to Dashboard (Direct Link)
                 </Link>
-              </div>
+              </div> */}
             </form>
 
             <p className="register-link" style={{ textAlign: 'center', marginTop: '20px' }}>

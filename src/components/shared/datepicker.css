@@ -12,13 +12,14 @@
 }
 
 .date-picker .date-input {
-  padding: 0.5rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 0.9rem;
+  padding: 0.75rem;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
   width: 100%;
-  max-width: 200px;
+  max-width: 300px;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .date-picker .date-input:focus {
@@ -43,9 +44,9 @@
 
 .date-picker-modal {
   background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 8px 32px rgba(136, 35, 35, 0.18);
-  width: 320px;
+  border-radius: 12px;
+  box-shadow: 0 12px 40px rgba(136, 35, 35, 0.25);
+  width: 400px;
   overflow: hidden;
   animation: fadeInModal 0.2s;
 }
@@ -67,14 +68,135 @@
 .date-picker-month-selector {
   display: flex;
   align-items: center;
+  gap: 8px;
 }
 
 .date-picker-month-selector select {
-  padding: 4px 8px;
+  padding: 8px 12px;
   border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23882323' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 16px;
+  padding-right: 32px;
+  max-height: 200px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #882323 #f0f0f0;
+}
+
+.date-picker-month-selector select:hover {
+  border-color: #882323;
+}
+
+.date-picker-month-selector select:focus {
+  outline: none;
+  border-color: #882323;
+  box-shadow: 0 0 0 2px rgba(136, 34, 35, 0.1);
+}
+
+/* Custom scrollbar styles for Webkit browsers */
+.date-picker-month-selector select::-webkit-scrollbar,
+.date-picker-year-selector select::-webkit-scrollbar {
+  width: 8px;
+}
+
+.date-picker-month-selector select::-webkit-scrollbar-track,
+.date-picker-year-selector select::-webkit-scrollbar-track {
+  background: #f0f0f0;
   border-radius: 4px;
-  font-size: 0.9rem;
-  margin-right: 8px;
+}
+
+.date-picker-month-selector select::-webkit-scrollbar-thumb,
+.date-picker-year-selector select::-webkit-scrollbar-thumb {
+  background-color: #882323;
+  border-radius: 4px;
+  border: 2px solid #f0f0f0;
+}
+
+.date-picker-month-selector select::-webkit-scrollbar-thumb:hover,
+.date-picker-year-selector select::-webkit-scrollbar-thumb:hover {
+  background-color: #a82a2a;
+}
+
+/* Dark mode scrollbar styles */
+.dark-mode .date-picker-month-selector select::-webkit-scrollbar-track,
+.dark-mode .date-picker-year-selector select::-webkit-scrollbar-track {
+  background: #333;
+}
+
+.dark-mode .date-picker-month-selector select::-webkit-scrollbar-thumb,
+.dark-mode .date-picker-year-selector select::-webkit-scrollbar-thumb {
+  background-color: #882323;
+  border: 2px solid #333;
+}
+
+.dark-mode .date-picker-month-selector select::-webkit-scrollbar-thumb:hover,
+.dark-mode .date-picker-year-selector select::-webkit-scrollbar-thumb:hover {
+  background-color: #a82a2a;
+}
+
+/* Year selector styles */
+.date-picker-year-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.date-picker-year-selector select {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23882323' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 16px;
+  padding-right: 32px;
+  max-height: 200px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #882323 #f0f0f0;
+}
+
+.date-picker-year-selector select:hover {
+  border-color: #882323;
+}
+
+.date-picker-year-selector select:focus {
+  outline: none;
+  border-color: #882323;
+  box-shadow: 0 0 0 2px rgba(136, 34, 35, 0.1);
+}
+
+/* Dark mode support for new selectors */
+.dark-mode .date-picker-month-selector select,
+.dark-mode .date-picker-year-selector select {
+  background-color: #333;
+  color: #fff;
+  border-color: #555;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+}
+
+.dark-mode .date-picker-month-selector select:hover,
+.dark-mode .date-picker-year-selector select:hover {
+  border-color: #882323;
+}
+
+.dark-mode .date-picker-month-selector select:focus,
+.dark-mode .date-picker-year-selector select:focus {
+  border-color: #882323;
+  box-shadow: 0 0 0 2px rgba(136, 34, 35, 0.2);
 }
 
 .date-picker-nav-buttons {
@@ -106,7 +228,7 @@
   text-align: center;
   font-weight: bold;
   font-size: 0.8rem;
-  color: #666;
+  color: #da17177e;
   margin-bottom: 8px;
 }
 
@@ -120,20 +242,24 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 36px;
+  height: 42px;
   border-radius: 50%;
   cursor: pointer;
-  font-size: 0.9rem;
-  transition: background-color 0.2s;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  margin: 2px;
 }
 
 .date-picker-day:hover {
   background-color: #f0f0f0;
+  transform: scale(1.1);
 }
 
 .date-picker-day.selected {
   background-color: #882323;
   color: white;
+  transform: scale(1.1);
+  box-shadow: 0 2px 8px rgba(136, 34, 35, 0.3);
 }
 
 .date-picker-day.today {
@@ -157,17 +283,23 @@
 }
 
 .date-picker-button {
-  padding: 8px 16px;
+  padding: 10px 20px;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
-  font-size: 0.9rem;
-  margin-left: 8px;
+  font-size: 1rem;
+  margin-left: 12px;
+  transition: all 0.3s ease;
+}
+
+.date-picker-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .date-picker-button.cancel {
   background-color: #f0f0f0;
-  color: #333;
+  color: #882323;
 }
 
 .date-picker-button.ok {
@@ -178,7 +310,7 @@
 .date-picker-selected-date {
   font-size: 1.2rem;
   font-weight: 600;
-  color: #333;
+  color: #882323;
   padding: 16px;
   text-align: center;
   border-bottom: 1px solid #eee;
@@ -201,16 +333,18 @@
 
 .date-input-group label {
   font-size: 0.9rem;
-  color: #666;
+  color: #da17177e;
 }
 
 .date-input-group .date-input {
-  padding: 0.5rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 0.9rem;
+  padding: 0.75rem;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
   width: 100%;
+  max-width: 300px;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .date-input-group .date-input:focus {
@@ -229,17 +363,18 @@
 
 .month-picker label {
   font-size: 0.9rem;
-  color: #666;
+  color: #da17177e;
 }
 
 .month-picker .month-select {
-  padding: 0.5rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 0.9rem;
+  padding: 0.75rem;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
   background-color: white;
   width: 100%;
-  max-width: 200px;
+  max-width: 300px;
+  transition: all 0.3s ease;
 }
 
 .month-picker .month-select:focus {
@@ -252,19 +387,19 @@
 .dark-mode .date-picker label,
 .dark-mode .date-input-group label,
 .dark-mode .month-picker label {
-  color: #aaa;
+  color: #da17177e;
 }
 
 .dark-mode .date-input,
 .dark-mode .month-select {
-  background-color: #333;
+background-color: #882323;
   color: #fff;
-  border-color: #555;
+  border-color: #882323;
 }
 
 .dark-mode .date-input:focus,
 .dark-mode .month-select:focus {
-  border-color: #a92219;
+  border-color: #882323;
   box-shadow: 0 0 0 2px rgba(169, 34, 25, 0.2);
 }
 
@@ -274,7 +409,7 @@
 }
 
 .dark-mode .date-picker-header {
-  background-color: #333;
+    background-color: #333;
   border-color: #444;
 }
 
@@ -297,11 +432,11 @@
 }
 
 .dark-mode .date-picker-day.selected {
-  background-color: #a92219;
+  background-color: #882323;
 }
 
 .dark-mode .date-picker-day.today {
-  border-color: #a92219;
+  border-color: #882323;
 }
 
 .dark-mode .date-picker-day.disabled {

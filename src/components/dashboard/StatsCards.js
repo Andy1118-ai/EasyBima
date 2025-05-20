@@ -14,7 +14,7 @@ function StatsCards({ stats }) {
         </div>
       </div>
       
-      <div className="card stat-card fade-in" style={{ animationDelay: '0.1s' }}>
+      <div className="card stat-card fade-in" style={{ animationDelay: '0.5s' }}>
         <div className="stat-icon projects">
           <FaClipboardList />
         </div>
@@ -24,7 +24,7 @@ function StatsCards({ stats }) {
         </div>
       </div>
       
-      <div className="card stat-card fade-in" style={{ animationDelay: '0.2s' }}>
+      <div className="card stat-card fade-in" style={{ animationDelay: '0.5s' }}>
         <div className="stat-icon notifications">
           <FaBell />
         </div>
