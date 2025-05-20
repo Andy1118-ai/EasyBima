@@ -52,7 +52,7 @@ function App() {
           borderRadius: '5px',
           textDecoration: 'none',
           fontSize: '1.1rem',
-          transition: 'background-color 0.3s ease'
+          transition: 'background-color 0.5s ease'
         }}>Login</Link>
         <Link to="/register" style={{
           backgroundColor: '#f8f9fa',

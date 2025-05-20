@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useContext } from 'react';
+import { ThemeContext } from '../../ThemeContext';
 import './datepicker.css';
 
 /**
@@ -18,6 +19,7 @@ import './datepicker.css';
 const DatePicker = (props) => {
   const {
     onChange,
+    onDateSelect,
     selectedDate,
     label,
     minDate,
@@ -29,6 +31,9 @@ const DatePicker = (props) => {
     form,
     setForm
   } = props;
+
+  // Get theme from context
+  const { theme } = useContext(ThemeContext);
 
   const [date, setDate] = useState(selectedDate || '');
   const [showModal, setShowModal] = useState(false);
@@ -113,6 +118,12 @@ const DatePicker = (props) => {
       onChange(newDate);
     } else {
       console.log('No onChange handler provided');
+    }
+
+    // Support onDateSelect callback pattern
+    if (onDateSelect) {
+      console.log('Calling onDateSelect with:', newDate);
+      onDateSelect(newDate);
     }
 
     // Support form pattern used in quoteformsummary.js

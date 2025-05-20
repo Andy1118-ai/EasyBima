@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { getFAQsByCategory, faqCategories, searchFAQs } from '../../../data/FAQData';
+import { ThemeContext } from '../../../ThemeContext';
 import '../../../styles/auth.css';
+import '../../../styles/faqs.css';
 
 /**
  * Reusable FAQ Section component that can be used across the application
@@ -22,6 +24,8 @@ const FAQSection = ({
   maxItems = null,
   categoryFilter = null
 }) => {
+  // Get theme context for styling
+  useContext(ThemeContext);
   // Get initial FAQs to initialize activeItems correctly
   const initialFaqs = categoryFilter
     ? getFAQsByCategory(categoryFilter)
@@ -103,61 +107,26 @@ const FAQSection = ({
 
       {/* Search input */}
       {showSearch && (
-        <div className="faq-search" style={{
-          margin: '20px auto',
-          maxWidth: '500px',
-          position: 'relative'
-        }}>
+        <div className="faq-search">
           <input
             type="text"
             placeholder="Search FAQs..."
             value={searchTerm}
             onChange={handleSearchChange}
-            style={{
-              width: '100%',
-              padding: '12px 20px',
-              border: '2px solid #e1e1e1',
-              borderRadius: '30px',
-              fontSize: '16px',
-              backgroundColor: '#f9f9f9',
-              transition: 'border-color 0.3s ease, box-shadow 0.3s ease'
-            }}
             className="faq-search-input"
           />
-          <span style={{
-            position: 'absolute',
-            right: '15px',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            color: '#999'
-          }}>🔍</span>
+          <span className="faq-search-icon">🔍</span>
         </div>
       )}
 
       {/* Category filters */}
       {showCategories && !categoryFilter && (
-        <div className="faq-categories" style={{
-          display: 'flex',
-          justifyContent: 'center',
-          flexWrap: 'wrap',
-          gap: '10px',
-          margin: '20px 0 30px'
-        }}>
+        <div className="faq-categories">
           {faqCategories.map(category => (
             <button
               key={category.id}
               onClick={() => handleCategoryChange(category.id)}
-              className={activeCategory === category.id ? 'active' : ''}
-              style={{
-                padding: '8px 15px',
-                backgroundColor: activeCategory === category.id ? '#A92219' : '#f0f0f0',
-                color: activeCategory === category.id ? 'white' : '#333',
-                border: 'none',
-                borderRadius: '20px',
-                cursor: 'pointer',
-                fontWeight: '500',
-                transition: 'all 0.3s ease'
-              }}
+              className={`faq-category-btn ${activeCategory === category.id ? 'active' : ''}`}
             >
               {category.name}
             </button>
@@ -185,8 +154,8 @@ const FAQSection = ({
             </div>
           ))
         ) : (
-          <div style={{ textAlign: 'center', padding: '30px 20px' }}>
-            <p style={{ color: '#666', fontSize: '16px' }}>
+          <div className="faq-empty-state">
+            <p>
               {searchTerm
                 ? "No FAQs match your search. Please try different keywords or browse by category."
                 : "No FAQs available in this category."}
@@ -197,43 +166,16 @@ const FAQSection = ({
 
       {/* Contact CTA */}
       {showContactCTA && (
-        <div style={{
-          margin: '40px auto',
-          textAlign: 'center',
-          padding: '20px',
-          backgroundColor: '#f9f9f9',
-          borderRadius: '8px',
-          maxWidth: '600px'
-        }}>
-          <h3 style={{ marginBottom: '15px', color: '#333' }}>Can't find what you're looking for?</h3>
-          <p style={{ marginBottom: '20px', color: '#666' }}>
+        <div className="faq-contact-cta">
+          <h3 className="faq-contact-title">Can't find what you're looking for?</h3>
+          <p className="faq-contact-text">
             Our customer support team is ready to assist you with any questions you may have.
           </p>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '15px', flexWrap: 'wrap' }}>
-            <a
-              href="tel:0703099120"
-              style={{
-                padding: '10px 20px',
-                backgroundColor: '#A92219',
-                color: 'white',
-                textDecoration: 'none',
-                borderRadius: '5px',
-                fontWeight: '500'
-              }}
-            >
+          <div className="faq-contact-buttons">
+            <a href="tel:0703099120" className="faq-contact-btn">
               Call Us
             </a>
-            <a
-              href="mailto:callc@cic.co.ke"
-              style={{
-                padding: '10px 20px',
-                backgroundColor: '#A92219',
-                color: 'white',
-                textDecoration: 'none',
-                borderRadius: '5px',
-                fontWeight: '500'
-              }}
-            >
+            <a href="mailto:callc@cic.co.ke" className="faq-contact-btn">
               Email Us
             </a>
           </div>

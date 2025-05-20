@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getFAQsByCategory } from '../../../data/FAQData';
+import '../../../styles/faqs.css';
 
 /**
  * Small FAQ widget that can be embedded anywhere in the application
@@ -19,10 +20,10 @@ const FAQWidget = ({
   style = 'default'
 }) => {
   const [activeItems, setActiveItems] = useState({});
-  
+
   // Get FAQs for the specified category
   const faqs = getFAQsByCategory(category).slice(0, maxItems);
-  
+
   // Toggle FAQ item open/closed
   const toggleItem = (id) => {
     setActiveItems(prev => ({
@@ -30,111 +31,61 @@ const FAQWidget = ({
       [id]: !prev[id]
     }));
   };
-  
-  // Apply different styling based on the style prop
-  const getContainerStyle = () => {
+
+  // Get CSS class based on style prop
+  const getStyleClass = () => {
     switch(style) {
       case 'compact':
-        return {
-          padding: '10px',
-          fontSize: '14px',
-          backgroundColor: '#f9f9f9'
-        };
+        return 'compact';
       case 'bordered':
-        return {
-          padding: '15px',
-          border: '1px solid #e1e1e1',
-          borderRadius: '8px'
-        };
+        return 'bordered';
       default:
-        return {
-          padding: '15px',
-          backgroundColor: 'white',
-          borderRadius: '8px',
-          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)'
-        };
+        return '';
     }
   };
 
+  const styleClass = getStyleClass();
+
   return (
-    <div className="faq-widget" style={getContainerStyle()}>
+    <div className={`faq-widget ${styleClass}`}>
       {title && (
-        <h4 style={{ 
-          margin: '0 0 12px 0', 
-          color: '#333', 
-          fontSize: style === 'compact' ? '16px' : '18px',
-          fontWeight: '600'
-        }}>
+        <h4 className="faq-widget-title">
           {title}
         </h4>
       )}
-      
+
       <div className="faq-widget-content">
         {faqs.length > 0 ? (
           faqs.map(faq => (
-            <div 
-              key={faq.id} 
+            <div
+              key={faq.id}
               className={`faq-widget-item ${activeItems[faq.id] ? 'active' : ''}`}
-              style={{
-                margin: '8px 0',
-                borderBottom: style !== 'compact' ? '1px solid #f0f0f0' : 'none',
-                paddingBottom: '8px'
-              }}
             >
-              <div 
+              <div
+                className="faq-widget-question"
                 onClick={() => toggleItem(faq.id)}
-                style={{
-                  fontWeight: '500',
-                  color: '#333',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  fontSize: style === 'compact' ? '14px' : '15px'
-                }}
               >
                 <span>{faq.question}</span>
-                <span style={{ 
-                  transition: 'transform 0.3s ease',
-                  transform: activeItems[faq.id] ? 'rotate(180deg)' : 'rotate(0)',
-                  fontSize: '12px'
-                }}>▼</span>
+                <span className="faq-widget-arrow">▼</span>
               </div>
-              
+
               {activeItems[faq.id] && (
-                <div style={{
-                  margin: '8px 0 0',
-                  padding: '0 0 0 8px',
-                  fontSize: style === 'compact' ? '13px' : '14px',
-                  color: '#666',
-                  borderLeft: '2px solid #A92219'
-                }}>
+                <div className="faq-widget-answer">
                   {faq.answer}
                 </div>
               )}
             </div>
           ))
         ) : (
-          <p style={{ color: '#666', fontSize: '14px', margin: '10px 0' }}>
+          <p className="faq-widget-empty">
             No FAQs available.
           </p>
         )}
       </div>
-      
+
       {showViewAll && faqs.length > 0 && (
-        <div style={{ 
-          textAlign: 'right', 
-          marginTop: '10px',
-          fontSize: style === 'compact' ? '13px' : '14px'
-        }}>
-          <Link 
-            to="/faqs" 
-            style={{ 
-              color: '#A92219', 
-              textDecoration: 'none',
-              fontWeight: '500'
-            }}
-          >
+        <div className="faq-widget-footer">
+          <Link to="/faqs" className="faq-widget-view-all">
             View all FAQs
           </Link>
         </div>
@@ -143,4 +94,4 @@ const FAQWidget = ({
   );
 };
 
-export default FAQWidget; 
+export default FAQWidget;
