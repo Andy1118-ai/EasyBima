@@ -420,5 +420,12 @@ DateRangeCalendar.displayName = 'DateRangeCalendar';
 MonthPicker.displayName = 'MonthPicker';
 TimePicker.displayName = 'TimePicker';
 
-export { DateRangeCalendar, MonthPicker, TimePicker };
+// Export all components
+export {
+  Calendar,
+  DateRangeCalendar,
+  MonthPicker,
+  TimePicker
+};
+
 export default Calendar;

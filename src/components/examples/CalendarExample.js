@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Calendar } from '../shared/DatePicker';
+import { Calendar } from '../shared/date/DatePicker';
 import { formatDate, getLocalTimeZone } from '../../utils/dateUtils';
 
 const CalendarExample = () => {

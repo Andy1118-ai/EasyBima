@@ -7,8 +7,8 @@
 @import './auth.css';
 @import './claims.css';
 @import './faqs.css';
-@import './login-animations.css';
 @import './theme.css';
+@import './loginpage.css';
 
 /* Common styles */
 :root {

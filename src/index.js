@@ -99,10 +99,8 @@ function LoginSignup() {
   const navigate = useNavigate();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [passwordVisible, setPasswordVisible] = useState(false);
-  // eslint-disable-next-line no-unused-vars
-  const [_isLoading, setIsLoading] = useState(true);
-  // eslint-disable-next-line no-unused-vars
-  const [_error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [isPaused, setIsPaused] = useState(false);
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
@@ -111,36 +109,14 @@ function LoginSignup() {
     userType: 'customer',
     idNumber: '',
     password: '',
-    confirmPassword: '',
     rememberMe: false
   });
   const [formErrors, setFormErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loginError, setLoginError] = useState('');
-  // eslint-disable-next-line no-unused-vars
-  const [_socialLoading, setSocialLoading] = useState({
-    google: false,
-    facebook: false
-  });
-  // eslint-disable-next-line no-unused-vars
-  const [_showSignUp, setShowSignUp] = useState(false);
-  const [toast, setToast] = useState({ show: false, message: '', type: '' });
-  const [signupData, setSignupData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    userType: 'customer',
-    password: '',
-    confirmPassword: '',
-    agreeToTerms: false
-  });
-  const [signupErrors, setSignupErrors] = useState({});
-  const [signupStep, setSignupStep] = useState(1);
   const [focusedInputs, setFocusedInputs] = useState({});
   const [validatedFields, setValidatedFields] = useState({});
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const slides = [
     { image: picture1, description: 'Welcome to CIC EasyBima' },
     { image: picture2, description: 'Your trusted insurance partner' },
@@ -167,11 +143,6 @@ function LoginSignup() {
       setIsTransitioning(false);
     }, 50);
   }, [slides.length, isTransitioning]);
-
-  // eslint-disable-next-line no-unused-vars
-  const _togglePause = useCallback(() => {
-    setIsPaused(prev => !prev);
-  }, []);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -211,7 +182,6 @@ function LoginSignup() {
     setTouchEnd(null);
   };
 
-  // Enhanced image preloading for 4K images
   useEffect(() => {
     let isMounted = true;
     const preloadImages = async () => {
@@ -229,7 +199,6 @@ function LoginSignup() {
             img.onload = () => {
               loadedImages++;
               if (isMounted) {
-                // Update loading progress if needed
                 console.log(`Loaded image ${loadedImages}/${totalImages}`);
               }
               resolve();
@@ -254,12 +223,10 @@ function LoginSignup() {
     };
   }, [slides]);
 
-  // Fix slider auto-rotation to prevent DOM errors
   useEffect(() => {
     let interval;
     if (!isPaused) {
       interval = setInterval(() => {
-        // Only proceed if document is visible and not in transition
         if (document && !document.hidden && !isTransitioning) {
           setCurrentImageIndex((prevIndex) => (prevIndex + 1) % slides.length);
         }
@@ -271,13 +238,6 @@ function LoginSignup() {
       }
     };
   }, [isPaused, slides.length, isTransitioning]);
-
-  const formatPhoneNumber = (value) => {
-    const numbers = value.replace(/\D/g, '');
-    if (numbers.length <= 3) return numbers;
-    if (numbers.length <= 6) return `${numbers.slice(0, 3)}-${numbers.slice(3)}`;
-    return `${numbers.slice(0, 3)}-${numbers.slice(3, 6)}-${numbers.slice(6, 10)}`;
-  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -298,7 +258,6 @@ function LoginSignup() {
     e.preventDefault();
     setLoginError('');
 
-    // Validate form inputs
     const errors = validateForm();
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
@@ -309,7 +268,6 @@ function LoginSignup() {
     try {
       console.log('Login attempt with:', formData);
 
-      // Use the centralized login function
       const result = await login({
         identifier: formData.idNumber,
         userType: formData.userType,
@@ -318,8 +276,6 @@ function LoginSignup() {
 
       if (result.success) {
         console.log('Login successful, redirecting to dashboard');
-
-        // Use a timeout to ensure state is updated before navigation
         setTimeout(() => {
           navigate('/dashboard');
         }, 100);
@@ -337,91 +293,17 @@ function LoginSignup() {
   const validateForm = () => {
     const errors = {};
 
-    // Validate ID/Passport Number or KRA PIN using centralized validation
     const identifierValidation = validateIdentifier(formData.idNumber, formData.userType);
     if (!identifierValidation.isValid) {
       errors.idNumber = identifierValidation.error;
     }
 
-    // Validate Password using centralized validation
     const passwordValidation = validatePassword(formData.password);
     if (!passwordValidation.isValid) {
       errors.password = passwordValidation.error;
     }
 
-    // Only check confirmPassword if it's being used (for sign-up, not login)
-    if (formData.confirmPassword !== undefined && formData.password !== formData.confirmPassword) {
-      errors.confirmPassword = 'Passwords do not match';
-    }
-
-    // Always log validation results for debugging
-    console.log('Form validation results:', {
-      hasErrors: Object.keys(errors).length > 0,
-      errors,
-      formData
-    });
-
     return errors;
-  };
-
-  const showToast = (message, type = 'success') => {
-    setToast({ show: true, message, type });
-    setTimeout(() => setToast({ show: false, message: '', type: '' }), 3000);
-  };
-
-  // eslint-disable-next-line no-unused-vars
-  const _handleSocialLogin = async (provider) => {
-    setSocialLoading(prev => ({ ...prev, [provider.toLowerCase()]: true }));
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      showToast(`Successfully logged in with ${provider}!`, 'success');
-    } catch (error) {
-      showToast(`${provider} login failed. Please try again.`, 'error');
-    } finally {
-      setSocialLoading(prev => ({ ...prev, [provider.toLowerCase()]: false }));
-    }
-  };
-
-  // eslint-disable-next-line no-unused-vars
-  const _handleSignUpWithEmail = () => {
-    setShowSignUp(true);
-    setFormData({
-      userType: 'customer',
-      idNumber: '',
-      password: '',
-      confirmPassword: '',
-      rememberMe: false
-    });
-    setFormErrors({});
-    setLoginError('');
-  };
-
-  const validatePhoneNumber = async (phoneNumber) => {
-    try {
-      const cleanNumber = phoneNumber.replace(/\D/g, '');
-
-      if (cleanNumber.length >= 10) {
-        return {
-          isValid: true,
-          formattedNumber: formatPhoneNumber(cleanNumber),
-          countryCode: 'KE',
-          location: 'Kenya'
-        };
-      } else {
-        return {
-          isValid: false,
-          error: 'Invalid phone number'
-        };
-      }
-    } catch (error) {
-      if (process.env.NODE_ENV === 'development') {
-        console.error('Phone validation error:', error);
-      }
-      return {
-        isValid: false,
-        error: 'Failed to validate phone number'
-      };
-    }
   };
 
   const handleInputFocus = (e) => {
@@ -454,232 +336,34 @@ function LoginSignup() {
     let isValid = false;
 
     switch (name) {
-      case 'email':
-        if (!/\S+@\S+\.\S+/.test(value)) {
-          error = 'Please enter a valid email address';
-        } else {
-          isValid = true;
-          showToast('Valid email format!', 'success');
-        }
-        break;
-      case 'phone':
-        if (value.length < 12) {
-          error = 'Please enter a complete phone number';
-        } else {
-          const validation = await validatePhoneNumber(value);
-          if (!validation.isValid) {
-            error = validation.error;
-          } else {
-            isValid = true;
-            showToast('Phone number validated!', 'success');
-          }
-        }
+      case 'idNumber':
+        const identifierValidation = validateIdentifier(value, formData.userType);
+        isValid = identifierValidation.isValid;
         break;
       case 'password':
-        if (value.length < 6) {
-          error = 'Password must be at least 6 characters';
-        } else {
-          isValid = true;
-        }
-        break;
-      case 'confirmPassword':
-        if (value !== signupData.password) {
-          error = 'Passwords do not match';
-        } else {
-          isValid = true;
-          showToast('Passwords match!', 'success');
-        }
+        const passwordValidation = validatePassword(value);
+        isValid = passwordValidation.isValid;
         break;
       default:
         isValid = true;
         break;
     }
 
-    if (error) {
-      setSignupErrors(prev => ({
+    if (!isValid) {
+      setFormErrors(prev => ({
         ...prev,
         [name]: error
       }));
       return false;
     }
 
-    setSignupErrors(prev => ({
+    setFormErrors(prev => ({
       ...prev,
       [name]: ''
     }));
 
     return isValid;
   };
-
-  // eslint-disable-next-line no-unused-vars
-  const _handleSignupInputChange = async (e) => {
-    const { name, value, type, checked } = e.target;
-    let processedValue = value;
-
-    if (name === 'phone') {
-      processedValue = formatPhoneNumber(value);
-
-      if (processedValue.length === 12) {
-        const validation = await validatePhoneNumber(processedValue);
-        if (!validation.isValid) {
-          setSignupErrors(prev => ({
-            ...prev,
-            phone: validation.error
-          }));
-        } else {
-          processedValue = validation.formattedNumber;
-          setSignupErrors(prev => ({
-            ...prev,
-            phone: ''
-          }));
-
-          showToast('Phone number validated!', 'success');
-        }
-      }
-    }
-
-    setSignupData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : processedValue
-    }));
-
-    if (signupErrors[name]) {
-      setSignupErrors(prev => ({
-        ...prev,
-        [name]: ''
-      }));
-    }
-  };
-
-  // eslint-disable-next-line no-unused-vars
-  const _nextStep = () => {
-    if (signupStep === 1) {
-      const errors = validatePersonalInfo();
-      if (Object.keys(errors).length > 0) {
-        setSignupErrors(errors);
-        return;
-      }
-    } else if (signupStep === 2) {
-      const errors = validateAccountInfo();
-      if (Object.keys(errors).length > 0) {
-        setSignupErrors(errors);
-        return;
-      }
-    }
-    setSignupStep(prev => prev + 1);
-  };
-
-  // eslint-disable-next-line no-unused-vars
-  const prevStep = () => {
-    setSignupStep(prev => prev - 1);
-  };
-
-  const validatePersonalInfo = () => {
-    const errors = {};
-    if (!signupData.firstName.trim()) errors.firstName = 'First name is required';
-    if (!signupData.lastName.trim()) errors.lastName = 'Last name is required';
-    if (!signupData.email.trim()) {
-      errors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(signupData.email)) {
-      errors.email = 'Please enter a valid email';
-    }
-    if (!signupData.phone.trim()) {
-      errors.phone = 'Phone number is required';
-    } else if (!/^\d{3}-\d{3}-\d{4}$/.test(signupData.phone)) {
-      errors.phone = 'Please enter a valid phone number';
-    }
-    return errors;
-  };
-
-  const validateAccountInfo = () => {
-    const errors = {};
-    if (!signupData.password) {
-      errors.password = 'Password is required';
-    } else if (signupData.password.length < 6) {
-      errors.password = 'Password must be at least 6 characters';
-    }
-    if (signupData.password !== signupData.confirmPassword) {
-      errors.confirmPassword = 'Passwords do not match';
-    }
-    if (!signupData.agreeToTerms) {
-      errors.agreeToTerms = 'You must agree to the terms and conditions';
-    }
-    return errors;
-  };
-
-  // eslint-disable-next-line no-unused-vars
-  const handleSignupSubmit = async (e) => {
-    e.preventDefault();
-    const errors = validateSignupForm();
-    if (Object.keys(errors).length > 0) {
-      setSignupErrors(errors);
-      return;
-    }
-
-    setIsSubmitting(true);
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      showToast('Account created successfully!', 'success');
-      setShowSignUp(false);
-    } catch (error) {
-      showToast('Failed to create account. Please try again.', 'error');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const validateSignupForm = () => {
-    const errors = {};
-    if (!signupData.firstName.trim()) errors.firstName = 'First name is required';
-    if (!signupData.lastName.trim()) errors.lastName = 'Last name is required';
-    if (!signupData.email.trim()) {
-      errors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(signupData.email)) {
-      errors.email = 'Please enter a valid email';
-    }
-    if (!signupData.phone.trim()) {
-      errors.phone = 'Phone number is required';
-    } else if (!/^\d{10}$/.test(signupData.phone)) {
-      errors.phone = 'Please enter a valid 10-digit phone number';
-    }
-    if (!signupData.password) {
-      errors.password = 'Password is required';
-    } else if (signupData.password.length < 8) {
-      errors.password = 'Password must be at least 8 characters';
-    }
-    if (signupData.password !== signupData.confirmPassword) {
-      errors.confirmPassword = 'Passwords do not match';
-    }
-    if (!signupData.agreeToTerms) {
-      errors.agreeToTerms = 'You must agree to the terms and conditions';
-    }
-    return errors;
-  };
-
-  // Update the parallax effect
-  const handleScroll = useCallback((e) => {
-    const scrolled = e.target.scrollTop;
-    const parallaxElements = document.querySelectorAll('.parallax-content');
-    if (parallaxElements) {
-      parallaxElements.forEach(element => {
-        if (element && element.style) {
-          element.style.transform = `translateY(${scrolled * 0.5}px)`;
-        }
-      });
-    }
-  }, []);
-
-  useEffect(() => {
-    const container = document.querySelector('.left-panel');
-    if (container) {
-      container.addEventListener('scroll', handleScroll);
-      return () => {
-        if (container) {
-          container.removeEventListener('scroll', handleScroll);
-        }
-      };
-    }
-  }, [handleScroll]);
 
   return (
     <div className={`login-signup-page ${theme}-mode`}>
@@ -744,9 +428,7 @@ function LoginSignup() {
             background: '#f6f7fa'
           }}>
           <div className="login-container">
-            <h1 className="floating" style={{ textAlign: 'center', marginBottom: '0', color: '#222', fontWeight: 700, fontSize: '2rem' }}>Welcome to CIC Insurance</h1>
-            <p className="floating" style={{ textAlign: 'center', marginTop: '0', marginBottom: '20px', color: '#555', fontSize: '1.1rem' }}>Your trusted insurance partner</p>
-            <img src={logo} alt="cic insurance" className="logo" style={{ display: 'block', margin: '0 auto 20px', maxWidth: '150px' }} />
+            <img src={logo} alt="cic insurance" className="logo throbbing-logo" style={{ display: 'block', margin: '0 auto 30px', maxWidth: '150px' }} />
             <h1 style={{ textAlign: 'center', marginBottom: '10px', color: '#800000' }}>Sign in to CIC EasyBima</h1>
             <p className="tagline" style={{ textAlign: 'center', marginBottom: '30px', color: '#666' }}>Getting insured with us is easy as 1-2-3</p>
 
@@ -912,7 +594,6 @@ function LoginSignup() {
                 {isSubmitting ? <span className="spinner"></span> : 'Sign In'}
               </button>
 
-              {/* Direct link to dashboard for testing */}
               <div style={{ textAlign: 'center', marginTop: '15px' }}>
                 <Link to="/dashboard" style={{ color: '#800000', textDecoration: 'underline', fontWeight: 600 }}>
                   Go to Dashboard (Direct Link)
@@ -924,12 +605,6 @@ function LoginSignup() {
               Don't have an account? <Link to="/register" style={{ color: 'maroon', textDecoration: 'underline' }}>Register</Link>
             </p>
           </div>
-
-          {toast.show && (
-            <div className={`toast-notification ${toast.type}`}>
-              {toast.message}
-            </div>
-          )}
         </div>
       </div>
     </div>

@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import DatePickerManager from './shared/DatePickerManager';
+import DatePickerManager from './shared/date/DatePickerManager';
 import './quoteformsummary.css';
-import './shared/DatePickerManager.css';
+import './shared/date/DatePickerManager.css';
 import { ThemeContext } from '../ThemeContext';
 
 // Common fields used across multiple forms
@@ -15,7 +15,7 @@ const commonFields = {
     { name: 'email', label: 'Email', type: 'email', placeholder: 'Enter your email address', required: true },
   ],
   motorVehicleBase: [
-    { name: 'vehicleMake', label: 'Vehicle Make', type: 'select', options: ['Select Vehicle Make', 'Toyota', 'Nissan', 'Ford', 'Chevrolet', 'Honda', 'Hyundai', 'Kia', 'Mercedes-Benz', 'BMW', 'Audi', 'Volkswagen', 'Volvo', 'Jeep', 'Land Rover', 'Lexus', 'Mazda', 'Mercedes-Benz', 'Mini', 'Mitsubishi', 'Nissan', 'Peugeot', 'Renault', 'Skoda', 'Subaru', 'Suzuki', 'Toyota', 'Volkswagen', 'Volvo'], required: true },
+    { name: 'vehicleMake', label: 'Vehicle Make', type: 'select', options: ['Select Vehicle Make', 'Toyota', 'Nissan', 'Ford', 'Chevrolet', 'Honda', 'Hyundai', 'Kia', 'Mercedes-Benz', 'BMW', 'Audi', 'Volkswagen', 'Volvo', 'Jeep', 'Land Rover', 'Lexus', 'Mazda', 'Mini', 'Mitsubishi', 'Peugeot', 'Renault', 'Skoda', 'Subaru', 'Suzuki'], required: true },
     { name: 'vehicleModel', label: 'Vehicle Model', type: 'select', options: ['Select Vehicle Model', 'Corolla', 'Camry', 'RAV4', 'Highlander', 'Land Cruiser', 'Prado', 'Fortuner', 'Hilux', 'Altima', 'Sentra', 'Patrol', 'X-Trail', 'Navara', 'Focus', 'Ranger', 'F-150', 'Escape', 'EcoSport', 'Malibu', 'Cruze', 'Silverado', 'Tahoe', 'Suburban', 'Civic', 'Accord', 'CR-V', 'HR-V', 'Pilot', 'Elantra', 'Tucson', 'Santa Fe', 'i20', 'i30', 'Sportage', 'Sorento', 'Rio', 'Picanto', 'C-Class', 'E-Class', 'S-Class', 'GLC', 'GLE', '3 Series', '5 Series', 'X3', 'X5', 'A3', 'A4', 'A6', 'Q3', 'Q5', 'Golf', 'Passat', 'Tiguan', 'Polo', 'XC40', 'XC60', 'XC90', 'Wrangler', 'Cherokee', 'Grand Cherokee', 'Range Rover', 'Discovery', 'Defender', 'Evoque', 'ES', 'RX', 'LX', 'NX', 'CX-5', 'CX-30', 'Mazda3', 'Mazda6', 'Cooper', 'Countryman', 'Outlander', 'Pajero', 'ASX', 'Eclipse Cross', '208', '308', '3008', '5008', 'Clio', 'Megane', 'Duster', 'Koleos', 'Octavia', 'Superb', 'Kodiaq', 'Karoq', 'Forester', 'Outback', 'Impreza', 'XV', 'Swift', 'Jimny', 'Vitara', 'Ertiga'], required: true },
     { name: 'year', label: 'Year of Manufacture', type: 'text', placeholder: 'YOM', required: true, note: 'Maximum vehicle age for comprehensive cover is 15 yrs' },
     { name: 'vehicleValue', label: 'Vehicle Value', type: 'text', placeholder: 'Kes', required: true, note: 'Minimum value for comprehensive cover is Kes 500,000' },

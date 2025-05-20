@@ -1075,3 +1075,13 @@ body.theme-light .theme-toggle-btn {
 * {
   transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 }
+
+.throbbing-logo {
+  animation: throbbing 1.5s infinite ease-in-out;
+}
+
+@keyframes throbbing {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}

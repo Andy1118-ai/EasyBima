@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import DatePickerManager, { DateTimePickerManager } from '../shared/DatePickerManager';
+import DatePickerManager, { DateTimePickerManager } from '../shared/date/DatePickerManager';
 import {
   Calendar,
   DateRangeCalendar,
@@ -9,7 +9,7 @@ import {
   ModalDateRangeCalendar,
   ModalMonthPicker,
   ModalTimePicker
-} from '../shared/DatePicker';
+} from '../shared/date/DatePicker';
 import { getLocalTimeZone, formatDate } from '../../utils/dateUtils';
 import { registerLocale } from 'react-datepicker';
 import enGB from 'date-fns/locale/en-GB';

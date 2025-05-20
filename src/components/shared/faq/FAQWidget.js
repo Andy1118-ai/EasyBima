@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getFAQsByCategory } from '../../data/FAQData';
+import { getFAQsByCategory } from '../../../data/FAQData';
 
 /**
  * Small FAQ widget that can be embedded anywhere in the application

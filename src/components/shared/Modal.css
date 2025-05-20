@@ -1,10 +1,4 @@
-/* 
- * Modal.css
- * Styles for the reusable Modal component
- */
-
-/* Modal Overlay */
-.modal-overlay {
+.modal-backdrop {
   position: fixed;
   top: 0;
   left: 0;
@@ -12,141 +6,58 @@
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   z-index: 1000;
-  opacity: 0;
-  transition: opacity 0.3s ease;
 }
 
-.modal-overlay.open {
-  opacity: 1;
-}
-
-.modal-overlay.closing {
-  opacity: 0;
-}
-
-/* Modal Dialog */
-.modal-dialog {
-  background-color: #fff;
+.modal-content {
+  background: white;
   border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  width: 100%;
+  padding: 20px;
+  position: relative;
+  max-width: 90%;
   max-height: 90vh;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  transform: translateY(20px);
-  opacity: 0;
-  transition: transform 0.3s ease, opacity 0.3s ease;
+  overflow-y: auto;
 }
 
-.modal-dialog.open {
-  transform: translateY(0);
-  opacity: 1;
+.modal-content.small {
+  width: 300px;
 }
 
-.modal-dialog.closing {
-  transform: translateY(20px);
-  opacity: 0;
+.modal-content.medium {
+  width: 500px;
 }
 
-/* Modal sizes */
-.modal-dialog.small {
-  max-width: 400px;
+.modal-content.large {
+  width: 800px;
 }
 
-.modal-dialog.medium {
-  max-width: 600px;
-}
-
-.modal-dialog.large {
-  max-width: 800px;
-}
-
-/* Modal Header */
 .modal-header {
-  padding: 16px 20px;
-  border-bottom: 1px solid #eee;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 20px;
 }
 
-.modal-title {
+.modal-header h2 {
   margin: 0;
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #333;
+  font-size: 1.5rem;
 }
 
 .modal-close {
   background: none;
   border: none;
   font-size: 1.5rem;
-  line-height: 1;
-  padding: 0;
   cursor: pointer;
+  padding: 0;
   color: #666;
-  transition: color 0.2s ease;
 }
 
 .modal-close:hover {
-  color: #333;
+  color: #000;
 }
 
-/* Modal Body */
 .modal-body {
-  padding: 20px;
-  overflow-y: auto;
-  max-height: calc(90vh - 130px); /* Account for header and footer */
-}
-
-/* Modal Footer */
-.modal-footer {
-  padding: 16px 20px;
-  border-top: 1px solid #eee;
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-}
-
-/* Dark mode */
-.modal-overlay.dark-mode .modal-dialog {
-  background-color: #2d2d2d;
-  color: #f0f0f0;
-}
-
-.modal-overlay.dark-mode .modal-header {
-  border-bottom-color: #444;
-}
-
-.modal-overlay.dark-mode .modal-footer {
-  border-top-color: #444;
-}
-
-.modal-overlay.dark-mode .modal-title {
-  color: #f0f0f0;
-}
-
-.modal-overlay.dark-mode .modal-close {
-  color: #aaa;
-}
-
-.modal-overlay.dark-mode .modal-close:hover {
-  color: #fff;
-}
-
-/* Responsive styles */
-@media (max-width: 768px) {
-  .modal-dialog.small,
-  .modal-dialog.medium,
-  .modal-dialog.large {
-    max-width: 90%;
-  }
-  
-  .modal-body {
-    max-height: calc(90vh - 100px);
-  }
-}
+  margin-top: 10px;
+} 

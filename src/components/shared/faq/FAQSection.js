@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getFAQsByCategory, faqCategories, searchFAQs } from '../../data/FAQData';
+import { getFAQsByCategory, faqCategories, searchFAQs } from '../../../data/FAQData';
 import '../../styles/auth.css';
 
 /**

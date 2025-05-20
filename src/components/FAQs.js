@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { ThemeContext } from '../ThemeContext';
-import FAQSection from './shared/FAQSection';
+import FAQSection from './shared/faq/FAQSection';
 import '../styles/auth.css';
 import '../styles/faqs.css';
 import cicLogo from '../assets/cic_insurance.png';

@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useRef, useEffect, memo } from 'react';
-import { DateRangeCalendar } from './Calendar';
-import { formatDate, getLocalTimeZone } from '../../utils/dateUtils';
+import { DateRangeCalendar } from '../Calendar';
+import { formatDate, getLocalTimeZone } from '../../../utils/dateUtils';
 import './ModalDatePicker.css';
 
 /**

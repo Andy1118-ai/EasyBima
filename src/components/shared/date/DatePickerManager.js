@@ -1,7 +1,7 @@
 import React, { memo, useCallback } from 'react';
 import Calendar, { TimePicker } from './Calendar';
 import './DatePickerManager.css';
-import { getLocalTimeZone } from '../../utils/dateUtils';
+import { getLocalTimeZone } from '../../../utils/dateUtils';
 
 /**
  * Enhanced DatePickerManager component with accessibility features and performance optimizations
@@ -22,9 +22,6 @@ const DatePickerManager = memo(({
   helperText,
   timeZone = getLocalTimeZone(),
   dateFormat = "dd/MM/yyyy",
-  showTimeSelect = false,
-  timeFormat = "HH:mm",
-  timeIntervals = 15,
   locale,
   isClearable = false,
   onBlur,
@@ -65,9 +62,6 @@ const DatePickerManager = memo(({
         disabled={disabled}
         timeZone={timeZone}
         dateFormat={dateFormat}
-        showTimeSelect={showTimeSelect}
-        timeFormat={timeFormat}
-        timeIntervals={timeIntervals}
         locale={locale}
         isClearable={isClearable}
         onBlur={onBlur}
@@ -229,6 +223,7 @@ const DateTimePickerManager = memo(({
             minTime={minTime}
             maxTime={maxTime}
             isClearable={isClearable}
+            locale={locale}
           />
         </div>
       </div>
