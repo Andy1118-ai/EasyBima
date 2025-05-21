@@ -3,6 +3,8 @@
  * Centralizes authentication logic, validation, and user management
  */
 
+import { validatePassword as strictValidatePassword } from './formValidation';
+
 // User type constants
 export const USER_TYPES = {
   CUSTOMER: 'customer',
@@ -88,15 +90,7 @@ export const validateIdentifier = (identifier, userType) => {
  * @returns {Object} - Validation result with isValid and error message
  */
 export const validatePassword = (password) => {
-  if (!password) {
-    return { isValid: false, error: 'Password is required' };
-  }
-  
-  if (!VALIDATION_REGEX.PASSWORD.test(password)) {
-    return { isValid: false, error: 'Password must be at least 6 characters' };
-  }
-  
-  return { isValid: true, error: '' };
+  return strictValidatePassword(password);
 };
 
 /**
